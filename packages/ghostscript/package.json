@@ -1,0 +1,28 @@
+{
+  "name": "@privyid/ghostscript",
+  "description": "Ghostscript compiled to WebAssembly",
+  "version": "10.03.1",
+  "packageManager": "yarn@4.2.2",
+  "type": "module",
+  "main": "./dist/gs.cjs",
+  "module": "./dist/gs.js",
+  "types": "./dist/gs.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/gs.cjs",
+      "import": "./dist/gs.js",
+      "types": "./dist/gs.d.ts"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "prepare": "yarn build",
+    "build": "./build.sh"
+  },
+  "devDependencies": {
+    "@types/emscripten": "^1.39.13",
+    "vitest": "^1.6.0"
+  }
+}
