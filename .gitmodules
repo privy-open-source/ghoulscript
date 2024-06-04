@@ -1,0 +1,3 @@
+[submodule "packages/gs-wasm/ghostpdl"]
+	path = packages/ghostscript/ghostpdl
+	url = git://git.ghostscript.com/ghostpdl.git

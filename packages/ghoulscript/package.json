@@ -1,0 +1,18 @@
+{
+  "name": "@privyid/ghoulscript",
+  "packageManager": "yarn@4.2.2",
+  "scripts": {
+    "build": "unbuild",
+    "test": "deno run ./tests/sample.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "jiti": "^1.21.0",
+    "typescript": "^5.4.5",
+    "unbuild": "^2.0.0"
+  },
+  "dependencies": {
+    "@privyid/ghostscript": "workspace:^",
+    "defu": "^6.1.4"
+  }
+}
