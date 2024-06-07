@@ -33,14 +33,13 @@ export GS_LDFLAGS="\
   --post-js "$ROOT/build/post.js" \
   --closure 1 \
   -s STACK_SIZE=131072 \
-  -s USE_ZLIB=1 \
   -s EXPORT_ES6=1 \
   -s BINARYEN_EXTRA_PASSES=\"--pass-arg=max-func-params@39\" \
   -s WASM_BIGINT=1 \
   -s INITIAL_MEMORY=67108864 \
   -s ALLOW_MEMORY_GROWTH=1 \
   -s EXPORTED_RUNTIME_METHODS='[\"callMain\",\"FS\",\"NODEFS\",\"WORKERFS\",\"ENV\"]' \
-  -s INCOMING_MODULE_JS_API='[\"noInitialRun\",\"noFSInit\",\"locateFile\",\"preRun\",\"instantiateWasm\"]' \
+  -s INCOMING_MODULE_JS_API='[\"noInitialRun\",\"noFSInit\",\"locateFile\",\"preRun\",\"instantiateWasm\",\"print\",\"printErr\"]' \
   -s NO_DISABLE_EXCEPTION_CATCHING=1 \
   -s MODULARIZE=1 \
 "

@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "prepare": "yarn build",
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "test": "node --test"
   },
   "devDependencies": {
     "@types/emscripten": "^1.39.13",

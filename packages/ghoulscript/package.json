@@ -1,12 +1,25 @@
 {
   "name": "@privyid/ghoulscript",
   "packageManager": "yarn@4.2.2",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "prepare": "yarn build",
     "build": "unbuild",
-    "test": "deno run ./tests/sample.ts"
+    "test": "jiti ./tests/sample.ts"
   },
   "devDependencies": {
-    "@types/node": "^20.14.0",
+    "@tsconfig/node20": "^20.1.4",
     "jiti": "^1.21.0",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0"

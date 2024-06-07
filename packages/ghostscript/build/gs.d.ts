@@ -1,6 +1,6 @@
 interface GSModule extends EmscriptenModule {
   version: string,
-  callMain: (args: string[]) => Promise<number>
+  callMain: (args: string[]) => Promise<number>,
   FS: typeof FS,
   NODEFS: Emscripten.FileSystemType,
   WORKERFS: Emscripten.FileSystemType,
