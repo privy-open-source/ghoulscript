@@ -16,6 +16,7 @@ export CXXFLAGS="$CFLAGS"
 mkdir -p "$OUT_DIR"
 
 cd "$ROOT/ghostpdl"
+
 emconfigure ./autogen.sh \
   CCAUX=gcc CFLAGSAUX= CPPFLAGSAUX= \
   --host="wasm32-unknown-linux" \
@@ -42,6 +43,7 @@ export GS_LDFLAGS="\
   -s INCOMING_MODULE_JS_API='[\"noInitialRun\",\"noFSInit\",\"locateFile\",\"preRun\",\"instantiateWasm\",\"print\",\"printErr\"]' \
   -s NO_DISABLE_EXCEPTION_CATCHING=1 \
   -s MODULARIZE=1 \
+  -s EMULATE_FUNCTION_POINTER_CASTS=1 \
 "
 
 emmake make \
