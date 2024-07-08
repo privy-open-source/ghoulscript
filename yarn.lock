@@ -813,8 +813,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@privyid/ghostscript@workspace:packages/ghostscript"
   dependencies:
-    "@types/emscripten": "npm:^1.39.13"
-    vitest: "npm:^1.6.0"
+    "@types/emscripten": "npm:1.39.13"
+    vitest: "npm:1.6.0"
   languageName: unknown
   linkType: soft
 
@@ -823,7 +823,7 @@ __metadata:
   resolution: "@privyid/ghoulscript-monorepo@workspace:."
   dependencies:
     "@privyid/eslint-config-persona": "npm:^1.0.0-rc.6"
-    "@tsconfig/node20": "npm:^20.1.4"
+    "@tsconfig/node20": "npm:20.1.4"
     "@typescript-eslint/eslint-plugin": "npm:5.62.0"
     "@typescript-eslint/parser": "npm:5.62.0"
     "@vue/eslint-config-typescript": "npm:13.0.0"
@@ -838,8 +838,8 @@ __metadata:
     eslint-plugin-unicorn: "npm:48.0.1"
     eslint-plugin-varspacing: "npm:1.2.2"
     eslint-plugin-vue: "npm:9.23.0"
-    husky: "npm:^9.0.11"
-    lint-staged: "npm:^15.2.5"
+    husky: "npm:9.0.11"
+    lint-staged: "npm:15.2.5"
     typescript: "npm:5.4.5"
   languageName: unknown
   linkType: soft
@@ -849,11 +849,11 @@ __metadata:
   resolution: "@privyid/ghoulscript@workspace:packages/ghoulscript"
   dependencies:
     "@privyid/ghostscript": "workspace:^"
-    "@tsconfig/node20": "npm:^20.1.4"
+    "@tsconfig/node20": "npm:20.1.4"
     defu: "npm:^6.1.4"
-    jiti: "npm:^1.21.0"
-    typescript: "npm:^5.4.5"
-    unbuild: "npm:^2.0.0"
+    jiti: "npm:1.21.0"
+    typescript: "npm:5.4.5"
+    unbuild: "npm:2.0.0"
   languageName: unknown
   linkType: soft
 
@@ -1087,14 +1087,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/node20@npm:^20.1.4":
+"@tsconfig/node20@npm:20.1.4":
   version: 20.1.4
   resolution: "@tsconfig/node20@npm:20.1.4"
   checksum: 10c0/239cd6abaceaaffc758e7a9dd3748ec1acfdabd6de28a9a16a3824c21f17ad69a16184870298460345d2fb6f3663d092c21d5b764bef669a179658b4a7eac739
   languageName: node
   linkType: hard
 
-"@types/emscripten@npm:^1.39.13":
+"@types/emscripten@npm:1.39.13":
   version: 1.39.13
   resolution: "@types/emscripten@npm:1.39.13"
   checksum: 10c0/99c314418b6fbe113c4c81dc89501bdf723020d1de262a36a4e45236b268dcec3deab104e3a7d3569e6d7c5c942de30c9c6d77b93170c1bcaa85620c7ee4c2ba
@@ -3785,7 +3785,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^9.0.11":
+"husky@npm:9.0.11":
   version: 9.0.11
   resolution: "husky@npm:9.0.11"
   bin:
@@ -4153,7 +4153,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jiti@npm:^1.19.3, jiti@npm:^1.21.0":
+"jiti@npm:1.21.0, jiti@npm:^1.19.3, jiti@npm:^1.21.0":
   version: 1.21.0
   resolution: "jiti@npm:1.21.0"
   bin:
@@ -4315,7 +4315,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^15.2.5":
+"lint-staged@npm:15.2.5":
   version: 15.2.5
   resolution: "lint-staged@npm:15.2.5"
   dependencies:
@@ -6481,7 +6481,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.4.5, typescript@npm:^5.4.5":
+"typescript@npm:5.4.5":
   version: 5.4.5
   resolution: "typescript@npm:5.4.5"
   bin:
@@ -6491,7 +6491,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.4.5#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>":
   version: 5.4.5
   resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"
   bin:
@@ -6520,7 +6520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unbuild@npm:^2.0.0":
+"unbuild@npm:2.0.0":
   version: 2.0.0
   resolution: "unbuild@npm:2.0.0"
   dependencies:
@@ -6703,7 +6703,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^1.6.0":
+"vitest@npm:1.6.0":
   version: 1.6.0
   resolution: "vitest@npm:1.6.0"
   dependencies:

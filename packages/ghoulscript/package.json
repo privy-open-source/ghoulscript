@@ -25,10 +25,10 @@
     "test": "jiti ./tests/sample.ts"
   },
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.4",
-    "jiti": "^1.21.0",
-    "typescript": "^5.4.5",
-    "unbuild": "^2.0.0"
+    "@tsconfig/node20": "20.1.4",
+    "jiti": "1.21.0",
+    "typescript": "5.4.5",
+    "unbuild": "2.0.0"
   },
   "dependencies": {
     "@privyid/ghostscript": "workspace:^",
