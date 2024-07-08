@@ -8,6 +8,8 @@
   "scripts": {
     "lint": "eslint . --ext .js,.vue,.ts --format pretty",
     "fix": "yarn lint --fix",
+    "test": "yarn workspaces foreach -A run test",
+    "build": "yarn workspaces foreach -A --topological-dev run build",
     "postinstall": "husky"
   },
   "lint-staged": {

@@ -7,7 +7,13 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./rpc.worker": {
+      "import": "./dist/rpc.worker.mjs",
+      "require": "./dist/rpc.worker.cjs",
+      "types": "./dist/rpc.worker.d.ts"
     }
   },
   "files": [
@@ -27,5 +33,6 @@
   "dependencies": {
     "@privyid/ghostscript": "workspace:^",
     "defu": "^6.1.4"
-  }
+  },
+  "license": "AGPL-3.0-only"
 }
