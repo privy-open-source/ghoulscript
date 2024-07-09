@@ -22,8 +22,8 @@
     "test": "jiti ./tests/sample.ts"
   },
   "devDependencies": {
-    "jiti": "^1.21.0",
-    "typescript": "^5.4.5",
+    "jiti": "1.21.0",
+    "typescript": "5.4.5",
     "unbuild": "3.0.0-rc.6"
   },
   "dependencies": {
