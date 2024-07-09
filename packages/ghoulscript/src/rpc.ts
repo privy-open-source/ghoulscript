@@ -1,5 +1,3 @@
-import type { Config } from './config'
-import { getWorkerURL, useConfig } from './config'
 import * as core from './core'
 
 export type Core = typeof core
@@ -10,13 +8,10 @@ export type CommandArgs<C extends Commands> = Parameters<Core[C]>
 
 export type CommandResult<C extends Commands> = ReturnType<Core[C]>
 
-type PromiseFN = (...args: any[]) => Promise<any>
-
 export interface RPC <C extends Commands = any> {
   id: number,
   name: C,
   args: CommandArgs<C>,
-  config: Config,
 }
 
 export interface RPCResult<C extends Commands = any> {
@@ -27,14 +22,9 @@ export interface RPCResult<C extends Commands = any> {
 
 let worker: Worker
 
-export function useWorkerRPC () {
-  if (!worker) {
-    const url = useConfig().useCDN
-      ? getWorkerURL()
-      : new URL('rpc.worker.mjs', import.meta.url)
-
-    worker = new Worker(url, { type: 'module' })
-  }
+export async function useWorkerRPC () {
+  if (!worker)
+    worker = new Worker(new URL('rpc.worker.mjs', import.meta.url))
 
   return worker
 }
@@ -44,10 +34,10 @@ export function setWorkerRPC (worker_: Worker) {
 }
 
 export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>> (name: C, args: A) {
-  return await new Promise<CommandResult<C>>((resolve, reject) => {
-    const id     = Date.now()
-    const worker = useWorkerRPC()
+  const id     = Date.now()
+  const worker = await useWorkerRPC()
 
+  return await new Promise<CommandResult<C>>((resolve, reject) => {
     const onMessage = (event: MessageEvent<RPCResult<C>>) => {
       if (event.data.id === id) {
         cleanUp()
@@ -73,14 +63,13 @@ export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>
     worker.addEventListener('error', onError)
 
     worker.postMessage({
-      id    : id,
-      name  : name,
-      args  : args,
-      config: useConfig(),
+      id  : id,
+      name: name,
+      args: args,
     })
   })
 }
 
 export async function callRPC<C extends Commands> (name: C, args: CommandArgs<C>): Promise<CommandResult<C>> {
-  return await (core[name] as PromiseFN)(...args)
+  return await (core[name] as (...args: any[]) => Promise<any>)(...args)
 }

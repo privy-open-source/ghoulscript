@@ -3,14 +3,10 @@
 
 import type { RPC } from './rpc'
 import { callRPC } from './rpc'
-import { configureGS } from './config'
 
 self.addEventListener('message', (event: MessageEvent<RPC>) => {
-  const rpc    = event.data
-  const id     = rpc.id
-  const config = rpc.config
-
-  configureGS(config)
+  const rpc = event.data
+  const id  = rpc.id
 
   callRPC(rpc.name, rpc.args)
     .then((result) => {

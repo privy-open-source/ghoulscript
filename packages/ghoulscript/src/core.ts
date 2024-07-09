@@ -1,8 +1,5 @@
-import type { GSModule } from '@privyid/ghostscript'
-import initGS from '@privyid/ghostscript'
+import useGS from '@privyid/ghostscript'
 import { defu } from 'defu'
-import { getFileURL, useConfig } from './config'
-import { joinRelativeURL } from 'ufo'
 
 interface PageRange {
   start: number,
@@ -64,17 +61,6 @@ export interface CompressOptions {
    * createPDF({ pageList: ['1-3', '6-10'] })
    */
   pageList?: PageList,
-}
-
-async function useGS (moduleOverrides?: Partial<GSModule>) {
-  return await initGS(defu<Partial<GSModule>, [Partial<GSModule>]>(moduleOverrides, {
-    locateFile (url: string, dir: string) {
-      if ((typeof window !== 'undefined' || typeof importScripts === 'function') && useConfig().useCDN)
-        return getFileURL(url)
-
-      return joinRelativeURL(dir, url)
-    },
-  }))
 }
 
 async function createPDF (inputs: ArrayBufferView[], options: Partial<CompressOptions> = {}): Promise<Uint8Array> {
@@ -229,7 +215,7 @@ export interface RenderOptions {
   graphicsAlphaBits: 1 | 2 | 3 | 4,
   /**
    * Output format
-   * @default 'jpeg'
+   * @default 'jpg'
    */
   format: 'jpg' | 'png',
 }

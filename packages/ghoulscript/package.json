@@ -31,5 +31,13 @@
     "defu": "^6.1.4",
     "ufo": "^1.5.3"
   },
-  "license": "AGPL-3.0-only"
+  "license": "AGPL-3.0-only",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/privy-open-source/ghoulscript",
+    "directory": "packages/ghoulscript"
+  }
 }
