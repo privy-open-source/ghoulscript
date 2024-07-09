@@ -20,10 +20,10 @@ const mod     = await Module()
 const working = '/working'
 
 mod.FS.mkdir(working)
-mod.FS.mount(mod.NODEFS, { root: _dirname }, working)
+mod.FS.mount(mod.NODEFS, { root: __dirname }, working)
 mod.FS.chdir(working)
 
-await callMain([
+await mod.callMain([
   '-q',
   '-dSAFER',
   '-dBATCH',

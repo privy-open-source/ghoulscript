@@ -9,7 +9,7 @@ yarn add @privyid/ghoulscript
 
 ## How to Use
 
-### Using with Browser (Vite)
+### Using on Browser (Vite)
 
 ```ts
 import { optimizePDF } from '@privyid/ghoulscript'
@@ -27,7 +27,7 @@ input.addEventListener('change', async () => {
 })
 ```
 
-### Using with NodeJS
+### Using on NodeJS
 ```ts
 import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
@@ -109,7 +109,7 @@ const output = await addPassword(buffer, '123456', '112233')
 await fs.writeFile(resolve(__dirname, './sample.protected.pdf'), output)
 ```
 
-It equivalent with compressPDF's `userPassword` and `ownerPassword` options
+It's equal to compressPDF's `userPassword` and `ownerPassword` options
 
 ### removePassword (file: Buffer, oldPassword: string)
 
@@ -124,7 +124,7 @@ const output = await removePassword(buffer, '123456')
 await fs.writeFile(resolve(__dirname, './sample.unprotected.pdf'), output)
 ```
 
-It equivalent with compressPDF's `keepPassword: false`
+It's equal to compressPDF's `keepPassword: false`
 
 ### renderPageAsImage (file: Buffer, page: number = 1, options?: RenderOptions)
 
