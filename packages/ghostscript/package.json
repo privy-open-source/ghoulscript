@@ -1,7 +1,8 @@
 {
   "name": "@privyid/ghostscript",
   "description": "Ghostscript compiled to WebAssembly",
-  "version": "10.03.1",
+  "version": "0.1.0-alpha.1",
+  "gsVersion": "10.03.1",
   "packageManager": "yarn@4.2.2",
   "type": "module",
   "main": "./dist/gs.cjs",
@@ -12,6 +13,11 @@
       "require": "./dist/gs.cjs",
       "import": "./dist/gs.js",
       "types": "./dist/gs.d.ts"
+    },
+    "./meta": {
+      "require": "./dist/meta.cjs",
+      "import": "./dist/meta.mjs",
+      "types": "./dist/meta.d.ts"
     }
   },
   "files": [

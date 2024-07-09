@@ -1,4 +1,4 @@
-interface GSModule extends EmscriptenModule {
+export interface GSModule extends EmscriptenModule {
   version: string,
   callMain: (args: string[]) => Promise<number>,
   FS: typeof FS,

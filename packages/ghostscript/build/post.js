@@ -1,5 +1,5 @@
 /* eslint-disable quote-props, dot-notation */
-/* global FS, Module */
+/* global FS */
 Object.assign(FS, {
   'init'                : FS.init,
   'mkdir'               : FS.mkdir,
@@ -12,5 +12,3 @@ Object.assign(FS, {
     FS.ignorePermissions = val
   },
 })
-
-Module['version'] = '__VERSION__'

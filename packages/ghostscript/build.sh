@@ -55,7 +55,6 @@ emmake make \
 mkdir -p "$ROOT/dist"
 cd "$ROOT/dist"
 cp $ROOT/ghostpdl/bin/gs.* .
-cp $ROOT/build/gs.cjs .
 
 # Apply version & create d.ts
 node "$ROOT/build/post-build.js"

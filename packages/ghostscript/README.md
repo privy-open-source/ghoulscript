@@ -3,6 +3,7 @@
 
 > [!NOTE]
 > This is low-level WebAssembly library which part of [@privyid/ghoulscript](https://www.npmjs.com/package/@privyid/ghoulscript).
+> This use GS version `10.03.1`
 
 ## Installation
 
@@ -37,7 +38,7 @@ await callMain([
 ## Development
 
 - Clone this repo
-- Install [Emcripten](https://emscripten.org/docs/getting_started/downloads.html)
+- Install [Emcripten SDK](https://emscripten.org/docs/getting_started/downloads.html)
 - Run `yarn build`
 - Run `yarn test`
 
