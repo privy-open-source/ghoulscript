@@ -9,7 +9,7 @@ import {
   removePassword,
   renderPageAsImage,
   splitPdf,
-} from '../src/index.js'
+} from '../dist'
 
 const _filename = fileURLToPath(import.meta.url)
 const _dirname  = dirname(_filename)

@@ -1,53 +1,53 @@
+import { useConfig } from './config'
 import type {
   CommandArgs,
   CommandResult,
   Commands,
-} from './rpc.js'
+} from './rpc'
 import {
   callRPC,
   callWorkerRPC,
-} from './rpc.js'
+} from './rpc'
+import type * as core from './core'
 
-interface GSConfig {
-  useWebWorker: boolean,
-}
+export {
+  configureGS,
+} from './config'
 
-const config: GSConfig = { useWebWorker: typeof window !== 'undefined' }
-
-export function configureGS (config_: Partial<GSConfig>) {
-  Object.assign(config, config_)
-}
+export {
+  setWorkerRPC,
+} from './rpc'
 
 async function call <C extends Commands> (name: C, args: CommandArgs<C>): Promise<CommandResult<C>> {
-  return config.useWebWorker
-    ? await callWorkerRPC(name, args)
-    : await callRPC(name, args)
+  return useConfig().useWorker
+    ? callWorkerRPC(name, args)
+    : callRPC(name, args)
 }
 
-export async function optimizePDF (...args: CommandArgs<'optimizePDF'>): CommandResult<'optimizePDF'> {
+export const optimizePDF: typeof core.optimizePDF = async (...args: CommandArgs<'optimizePDF'>): CommandResult<'optimizePDF'> => {
   return await call('optimizePDF', args)
 }
 
-export async function combinePDF (...args: CommandArgs<'combinePDF'>): CommandResult<'combinePDF'> {
+export const combinePDF: typeof core.combinePDF = async (...args: CommandArgs<'combinePDF'>): CommandResult<'combinePDF'> => {
   return await call('combinePDF', args)
 }
 
-export async function splitPdf (...args: CommandArgs<'splitPdf'>): CommandResult<'splitPdf'> {
+export const splitPdf: typeof core.splitPdf =  async (...args: CommandArgs<'splitPdf'>): CommandResult<'splitPdf'> => {
   return await call('splitPdf', args)
 }
 
-export async function addPassword (...args: CommandArgs<'addPassword'>): CommandResult<'addPassword'> {
+export const addPassword: typeof core.addPassword = async (...args: CommandArgs<'addPassword'>): CommandResult<'addPassword'> => {
   return await call('addPassword', args)
 }
 
-export async function removePassword (...args: CommandArgs<'removePassword'>): CommandResult<'removePassword'> {
+export const removePassword: typeof core.removePassword = async (...args: CommandArgs<'removePassword'>): CommandResult<'removePassword'> => {
   return await call('removePassword', args)
 }
 
-export async function renderPageAsImage (...args: CommandArgs<'renderPageAsImage'>): CommandResult<'renderPageAsImage'> {
+export const renderPageAsImage: typeof core.renderPageAsImage = async (...args: CommandArgs<'renderPageAsImage'>): CommandResult<'renderPageAsImage'> => {
   return await call('renderPageAsImage', args)
 }
 
-export async function getInfo (...args: CommandArgs<'getInfo'>): CommandResult<'getInfo'> {
+export const getInfo: typeof core.getInfo = async (...args: CommandArgs<'getInfo'>): CommandResult<'getInfo'> => {
   return await call('getInfo', args)
 }

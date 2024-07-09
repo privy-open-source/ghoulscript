@@ -3,7 +3,8 @@
   "packageManager": "yarn@4.2.2",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "playground/*"
   ],
   "scripts": {
     "lint": "eslint . --ext .js,.vue,.ts --format pretty",

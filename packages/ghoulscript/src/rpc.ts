@@ -1,6 +1,6 @@
-import * as core from './core.js'
-
-let worker: Worker
+import type { Config } from './config'
+import { getWorkerURL, useConfig } from './config'
+import * as core from './core'
 
 export type Core = typeof core
 
@@ -16,18 +16,31 @@ export interface RPC <C extends Commands = any> {
   id: number,
   name: C,
   args: CommandArgs<C>,
+  config: Config,
 }
 
 export interface RPCResult<C extends Commands = any> {
   id: number,
   result: CommandResult<C>,
+  error?: undefined,
 }
 
+let worker: Worker
+
 export function useWorkerRPC () {
-  if (!worker)
-    worker = new Worker(new URL('rpc.worker', import.meta.url))
+  if (!worker) {
+    const url = useConfig().useCDN
+      ? getWorkerURL()
+      : new URL('rpc.worker.mjs', import.meta.url)
+
+    worker = new Worker(url, { type: 'module' })
+  }
 
   return worker
+}
+
+export function setWorkerRPC (worker_: Worker) {
+  worker = worker_
 }
 
 export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>> (name: C, args: A) {
@@ -38,7 +51,11 @@ export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>
     const onMessage = (event: MessageEvent<RPCResult<C>>) => {
       if (event.data.id === id) {
         cleanUp()
-        resolve(event.data.result)
+
+        if (event.data.error)
+          reject(event.data.error)
+        else
+          resolve(event.data.result)
       }
     }
 
@@ -56,9 +73,10 @@ export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>
     worker.addEventListener('error', onError)
 
     worker.postMessage({
-      id  : id,
-      name: name,
-      args: args,
+      id    : id,
+      name  : name,
+      args  : args,
+      config: useConfig(),
     })
   })
 }

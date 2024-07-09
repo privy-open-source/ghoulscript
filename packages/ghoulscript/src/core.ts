@@ -1,5 +1,8 @@
-import useGS from '@privyid/ghostscript'
+import type { GSModule } from '@privyid/ghostscript'
+import initGS from '@privyid/ghostscript'
 import { defu } from 'defu'
+import { getFileURL, useConfig } from './config'
+import { joinRelativeURL } from 'ufo'
 
 interface PageRange {
   start: number,
@@ -61,6 +64,17 @@ export interface CompressOptions {
    * createPDF({ pageList: ['1-3', '6-10'] })
    */
   pageList?: PageList,
+}
+
+async function useGS (moduleOverrides?: Partial<GSModule>) {
+  return await initGS(defu<Partial<GSModule>, [Partial<GSModule>]>(moduleOverrides, {
+    locateFile (url: string, dir: string) {
+      if ((typeof window !== 'undefined' || typeof importScripts === 'function') && useConfig().useCDN)
+        return getFileURL(url)
+
+      return joinRelativeURL(dir, url)
+    },
+  }))
 }
 
 async function createPDF (inputs: ArrayBufferView[], options: Partial<CompressOptions> = {}): Promise<Uint8Array> {
@@ -138,14 +152,33 @@ async function createPDF (inputs: ArrayBufferView[], options: Partial<CompressOp
   return gs.FS.readFile('./output', { encoding: 'binary' })
 }
 
+/**
+ * Optimize PDF and redure file size
+ * @param input
+ * @param option
+ * @returns
+ */
 export async function optimizePDF (input: ArrayBufferView, option: Partial<CompressOptions> = {}) {
   return await createPDF([input], option)
 }
 
+/**
+ * Merge multiple files into single file
+ * @param inputs
+ * @param option
+ * @returns
+ */
 export async function combinePDF (inputs: ArrayBufferView[], option: Partial<CompressOptions> = {}) {
   return await createPDF(inputs, option)
 }
 
+/**
+ * Split PDF into multiple files
+ * @param input
+ * @param pageLists
+ * @param option
+ * @returns
+ */
 export async function splitPdf (input: ArrayBufferView, pageLists: PageList[], option: Partial<CompressOptions> = {}) {
   return await Promise.all(
     pageLists.map(async (pageList) => {
@@ -154,6 +187,13 @@ export async function splitPdf (input: ArrayBufferView, pageLists: PageList[], o
   )
 }
 
+/**
+ * Add encryption password
+ * @param input
+ * @param userPassword
+ * @param ownerPassword
+ * @returns
+ */
 export async function addPassword (input: ArrayBufferView, userPassword: string, ownerPassword: string = userPassword) {
   return await createPDF([input], {
     ownerPassword,
@@ -194,6 +234,13 @@ export interface RenderOptions {
   format: 'jpg' | 'png',
 }
 
+/**
+ * Convert PDF to image
+ * @param input Input buffer
+ * @param pageNumber
+ * @param options
+ * @returns
+ */
 export async function renderPageAsImage (input: ArrayBufferView, pageNumber: number = 1, options: Partial<RenderOptions> = {}) {
   const gs   = await useGS()
   const opts = defu<RenderOptions, [RenderOptions]>(options, {
