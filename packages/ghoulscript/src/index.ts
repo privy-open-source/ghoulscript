@@ -51,3 +51,7 @@ export const renderPageAsImage: typeof core.renderPageAsImage = async (...args: 
 export const getInfo: typeof core.getInfo = async (...args: CommandArgs<'getInfo'>): CommandResult<'getInfo'> => {
   return await call('getInfo', args)
 }
+
+export const isRequirePassword: typeof core.isRequirePassword = async (...args: CommandArgs<'isRequirePassword'>): CommandResult<'isRequirePassword'> => {
+  return await call('isRequirePassword', args)
+}

@@ -18,11 +18,11 @@ const input = document.querySelector('input[type="file"]')
 
 input.addEventListener('change', async () => {
   if (input.files) {
-    const file   = input.files[0]
-    const buffer = await file.arrayBuffer()
-    const output = await optimizePDF(new Uint8Array(buffer))
+    const file      = input.files[0]
+    const output    = await optimizePDF(file)
+    const outputURL = URL.createObjectURL(new Blob([output], { type: 'application/pdf' }))
 
-    window.open(URL.createObjectURL(new Blob([output], { type: 'application/pdf' })), '_blank')
+    window.open(outputURL, '_blank')
   }
 })
 ```
@@ -60,7 +60,7 @@ await fs.writeFile(resolve(__dirname, './sample.compressed.pdf'), output)
 |---------------------------|:---------:|:--------:|------------------------------------------------------------------------------------|
 | `password`                | `String`  |    -     | Document protection password                                                       |
 | `pdfSettings`             | `String`  | `screen` | Preset setting, valid value is `screen`, `ebook`, `printer`, `prepress`, `default` |
-| `fastWebView`             | `Boolean` |  `true`  | Enable Linearization                                                               |
+| `fastWebView`             | `Boolean` |  `true`  | Enable Fast Web View (Linearization)                                               |
 | `compatibilityLevel`      | `String`  |  `1.4`   | Compability version                                                                |
 | `colorConversionStrategy` | `String`  |  `RGB`   | Color conversion strategy, valid value is `RGB`, `CMYK`                            |
 | `noTransparency`          | `Boolean` |  `true`  | Remove transparency                                                                |
@@ -181,6 +181,20 @@ console.log(info)
   ]
 }
 */
+```
+
+## isRequirePassword (file: Buffer)
+
+Check document is require password or not to open.
+
+```ts
+import { isRequirePassword } from '@privyid/ghoulscript'
+
+const bufferA = await fs.readFile(resolve(__dirname, './sample.pdf'))
+const bufferB = await fs.readFile(resolve(__dirname, './sample.protected.pdf'))
+
+console.log(await isRequirePassword(bufferA)) // false
+console.log(await isRequirePassword(bufferB)) // true
 ```
 
 ## License

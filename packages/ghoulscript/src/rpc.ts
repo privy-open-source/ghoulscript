@@ -24,7 +24,7 @@ let worker: Worker
 
 export async function useWorkerRPC () {
   if (!worker)
-    worker = new Worker(new URL('rpc.worker.mjs', import.meta.url))
+    worker = new Worker(new URL('rpc.worker.mjs', import.meta.url), { type: 'module' })
 
   return worker
 }

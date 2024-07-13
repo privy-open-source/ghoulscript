@@ -19,7 +19,7 @@ export interface CompressOptions {
    */
   pdfSettings: 'screen' | 'ebook' | 'printer' | 'prepress' | 'default',
   /**
-   * Enable Linearization
+   * Enable Fast Web View (Linearization)
    * @default true
    */
   fastWebView: boolean,
@@ -63,8 +63,17 @@ export interface CompressOptions {
   pageList?: PageList,
 }
 
-async function createPDF (inputs: ArrayBufferView[], options: Partial<CompressOptions> = {}): Promise<Uint8Array> {
-  const gs   = await useGS()
+type InputFile = ArrayBufferView | Blob
+
+async function readFile (input: InputFile): Promise<ArrayBufferView> {
+  if (input instanceof globalThis.Blob)
+    return new Uint8Array(await input.arrayBuffer())
+
+  return input
+}
+
+async function createPDF (inputs: InputFile[], options: Partial<CompressOptions> = {}): Promise<Uint8Array> {
+  const gs   = await useGS({ print () {}, printErr () {} })
   const opts = defu<CompressOptions, [CompressOptions]>(options, {
     pdfSettings            : 'screen',
     compatibilityLevel     : '1.4',
@@ -129,7 +138,7 @@ async function createPDF (inputs: ArrayBufferView[], options: Partial<CompressOp
   for (const [i, input] of inputs.entries()) {
     const inputFilename = `./input-${i}`
 
-    gs.FS.writeFile(inputFilename, input)
+    gs.FS.writeFile(inputFilename, await readFile(input))
     args.push(inputFilename)
   }
 
@@ -144,7 +153,7 @@ async function createPDF (inputs: ArrayBufferView[], options: Partial<CompressOp
  * @param option
  * @returns
  */
-export async function optimizePDF (input: ArrayBufferView, option: Partial<CompressOptions> = {}) {
+export async function optimizePDF (input: InputFile, option: Partial<CompressOptions> = {}): Promise<Uint8Array> {
   return await createPDF([input], option)
 }
 
@@ -154,7 +163,7 @@ export async function optimizePDF (input: ArrayBufferView, option: Partial<Compr
  * @param option
  * @returns
  */
-export async function combinePDF (inputs: ArrayBufferView[], option: Partial<CompressOptions> = {}) {
+export async function combinePDF (inputs: InputFile[], option: Partial<CompressOptions> = {}): Promise<Uint8Array> {
   return await createPDF(inputs, option)
 }
 
@@ -165,7 +174,7 @@ export async function combinePDF (inputs: ArrayBufferView[], option: Partial<Com
  * @param option
  * @returns
  */
-export async function splitPdf (input: ArrayBufferView, pageLists: PageList[], option: Partial<CompressOptions> = {}) {
+export async function splitPdf (input: InputFile, pageLists: PageList[], option: Partial<CompressOptions> = {}): Promise<Uint8Array[]> {
   return await Promise.all(
     pageLists.map(async (pageList) => {
       return await createPDF([input], defu({ pageList }, option))
@@ -180,7 +189,7 @@ export async function splitPdf (input: ArrayBufferView, pageLists: PageList[], o
  * @param ownerPassword
  * @returns
  */
-export async function addPassword (input: ArrayBufferView, userPassword: string, ownerPassword: string = userPassword) {
+export async function addPassword (input: InputFile, userPassword: string, ownerPassword: string = userPassword): Promise<Uint8Array> {
   return await createPDF([input], {
     ownerPassword,
     userPassword,
@@ -193,7 +202,7 @@ export async function addPassword (input: ArrayBufferView, userPassword: string,
  * @param password
  * @returns
  */
-export async function removePassword (input: ArrayBufferView, password: string) {
+export async function removePassword (input: InputFile, password: string): Promise<Uint8Array> {
   return await createPDF([input], { keepPassword: false, password: password })
 }
 
@@ -227,8 +236,8 @@ export interface RenderOptions {
  * @param options
  * @returns
  */
-export async function renderPageAsImage (input: ArrayBufferView, pageNumber: number = 1, options: Partial<RenderOptions> = {}) {
-  const gs   = await useGS()
+export async function renderPageAsImage (input: InputFile, pageNumber: number = 1, options: Partial<RenderOptions> = {}): Promise<Uint8Array> {
+  const gs   = await useGS({ print () {}, printErr () {} })
   const opts = defu<RenderOptions, [RenderOptions]>(options, {
     format           : 'jpg',
     graphicsAlphaBits: 4,
@@ -251,7 +260,7 @@ export async function renderPageAsImage (input: ArrayBufferView, pageNumber: num
     './input',
   ]
 
-  gs.FS.writeFile('./input', input)
+  gs.FS.writeFile('./input', await readFile(input))
 
   await gs.callMain(args)
 
@@ -273,7 +282,7 @@ export interface Info {
  * @param options
  * @returns
  */
-export async function getInfo (input: ArrayBufferView, options: Pick<CompressOptions, 'password'> = {}): Promise<Info> {
+export async function getInfo (input: InputFile, options: Pick<CompressOptions, 'password'> = {}): Promise<Info> {
   const info: Info = {
     numPages: 0,
     pages   : [],
@@ -313,9 +322,42 @@ export async function getInfo (input: ArrayBufferView, options: Pick<CompressOpt
   if (options.password)
     args.splice(-1, 0, `-sPDFPassword=${options.password}`)
 
-  gs.FS.writeFile('./input', input)
+  gs.FS.writeFile('./input', await readFile(input))
 
   await gs.callMain(args)
 
   return info
+}
+
+/**
+ * Check document is encrypted using password or not
+ * @param input
+ * @returns - true if required
+ */
+export async function isRequirePassword (input: InputFile): Promise<boolean> {
+  let result = false
+
+  const gs = await useGS({
+    print () {},
+    printErr (str) {
+      if (str.match('This file requires a password for access'))
+        result = true
+    },
+  })
+
+  const args = [
+    '-dQUIET',
+    '-dNOPAUSE',
+    '-dNODISPLAY',
+    '-dBATCH',
+    '-dSAFER',
+    '-dPDFINFO',
+    './input',
+  ]
+
+  gs.FS.writeFile('./input', await readFile(input))
+
+  await gs.callMain(args)
+
+  return result
 }
