@@ -596,7 +596,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privyid/eslint-config-persona@npm:^1.0.0-rc.6":
+"@privyid/eslint-config-persona@npm:1.0.0-rc.6":
   version: 1.0.0-rc.6
   resolution: "@privyid/eslint-config-persona@npm:1.0.0-rc.6"
   peerDependencies:
@@ -632,7 +632,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@privyid/ghoulscript-monorepo@workspace:."
   dependencies:
-    "@privyid/eslint-config-persona": "npm:^1.0.0-rc.6"
+    "@privyid/eslint-config-persona": "npm:1.0.0-rc.6"
     "@tsconfig/node20": "npm:20.1.4"
     "@typescript-eslint/eslint-plugin": "npm:5.62.0"
     "@typescript-eslint/parser": "npm:5.62.0"
