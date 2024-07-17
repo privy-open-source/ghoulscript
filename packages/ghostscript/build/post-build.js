@@ -20,9 +20,7 @@ async function createMeta () {
   }
 
   await writeFile(resolve(_dirname, '../dist/meta.cjs'), `module.export = ${JSON.stringify(meta)}${EOL}`)
-
   await writeFile(resolve(_dirname, '../dist/meta.mjs'), `export default ${JSON.stringify(meta)}${EOL}`)
-
   await copyFile(resolve(_dirname, './meta.d.ts'), resolve(_dirname, '../dist/meta.d.ts'))
 }
 

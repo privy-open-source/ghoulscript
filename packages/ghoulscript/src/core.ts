@@ -61,6 +61,25 @@ export interface CompressOptions {
    * createPDF({ pageList: ['1-3', '6-10'] })
    */
   pageList?: PageList,
+  /**
+   * Color image resolution
+   * @default 300
+   */
+  colorImageResolution: number,
+  /**
+   * Gray image resolution
+   * @default 300
+   */
+  grayImageResolution: number,
+  /**
+   * Monochrome image resolution
+   * @default 300
+   */
+  monoImageResolution: number,
+  /**
+   * Additional arguments to Ghostscript
+   */
+  args: string[],
 }
 
 type InputFile = ArrayBufferView | Blob
@@ -81,9 +100,14 @@ async function createPDF (inputs: InputFile[], options: Partial<CompressOptions>
     fastWebView            : true,
     noTransparency         : true,
     keepPassword           : true,
+    colorImageResolution   : 300,
+    grayImageResolution    : 300,
+    monoImageResolution    : 300,
+    args                   : [],
   })
 
   const args = [
+    ...opts.args,
     '-dQUIET',
     '-dNOPAUSE',
     '-dBATCH',
@@ -132,6 +156,9 @@ async function createPDF (inputs: InputFile[], options: Partial<CompressOptions>
     `-sColorConversionStrategy=${opts.colorConversionStrategy}`,
     `-dPDFSETTINGS=/${opts.pdfSettings}`,
     `-dFastWebView=${opts.fastWebView.toString()}`,
+    `-dColorImageResolution=${opts.colorImageResolution}`,
+    `-dGrayImageResolution=${opts.grayImageResolution}`,
+    `-dMonoImageResolution=${opts.monoImageResolution}`,
     '-sOutputFile=./output',
   )
 
@@ -227,6 +254,10 @@ export interface RenderOptions {
    * @default 'jpg'
    */
   format: 'jpg' | 'png',
+  /**
+   * Additional arguments to Ghostscript
+   */
+  args: string[],
 }
 
 /**
@@ -243,10 +274,12 @@ export async function renderPageAsImage (input: InputFile, pageNumber: number = 
     graphicsAlphaBits: 4,
     textAlphaBits    : 4,
     resolution       : 96,
+    args             : [],
   })
 
   const device = opts.format === 'png' ? 'png16m' : 'jpeg'
   const args   = [
+    ...opts.args,
     '-dQUIET',
     '-dNOPAUSE',
     '-dBATCH',

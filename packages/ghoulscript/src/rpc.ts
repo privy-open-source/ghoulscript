@@ -1,4 +1,5 @@
 import * as core from './core'
+import RpcWorker from './rpc.worker?worker&inline'
 
 export type Core = typeof core
 
@@ -24,7 +25,7 @@ let worker: Worker
 
 export async function useWorkerRPC () {
   if (!worker)
-    worker = new Worker(new URL('rpc.worker.mjs', import.meta.url), { type: 'module' })
+    worker = new RpcWorker({ name: 'rpc-worker' })
 
   return worker
 }

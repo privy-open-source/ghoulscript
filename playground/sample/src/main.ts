@@ -9,7 +9,7 @@ function bytes (bytes: number, decimal = 2, k = 1024) {
     return '0 Bytes'
 
   const sizes = [
-    `${bytes > 1 ? 'Bytes' : 'Byte'}`,
+    `${bytes === 1 ? 'Byte' : 'Bytes'}`,
     'KB',
     'MB',
     'GB',
@@ -30,13 +30,14 @@ input?.addEventListener('change', async () => {
 
   if (file) {
     try {
-      const start = performance.now()
+      const start  = performance.now()
+      const result = await optimizePDF(file)
 
-      const result = await optimizePDF(file) as Uint8Array
-      const diff   = Math.round((result.byteLength - file.size) / file.size * 100)
+      const diffBytes = result.byteLength - file.size
+      const diff      = Math.round(diffBytes / file.size * 100)
 
       if (log)
-        log.textContent = `Result: ${bytes(file.size)} => ${bytes(result.byteLength)} (${diff}%), Duration: ${Math.round((performance.now() - start) / 1000)}s`
+        log.textContent = `Result: ${bytes(file.size)} => ${bytes(result.byteLength)} (${diff}%: ${bytes(Math.abs(diffBytes))}), Duration: ${Math.round((performance.now() - start) / 1000)}s`
 
       window.open(URL.createObjectURL(new Blob([result], { type: 'application/pdf' })), '_blank')
     } catch (error) {

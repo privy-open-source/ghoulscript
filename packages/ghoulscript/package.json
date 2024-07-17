@@ -18,13 +18,15 @@
   ],
   "scripts": {
     "prepare": "yarn build",
-    "build": "unbuild",
+    "build": "vite build",
     "test": "node --test"
   },
   "devDependencies": {
-    "jiti": "1.21.0",
     "typescript": "5.4.5",
-    "unbuild": "3.0.0-rc.6"
+    "vite": "^5.3.3",
+    "vite-plugin-dts": "^3.9.1",
+    "vite-plugin-externalize-deps": "^0.8.0",
+    "vite-plugin-node-polyfills": "^0.22.0"
   },
   "dependencies": {
     "@privyid/ghostscript": "workspace:^",

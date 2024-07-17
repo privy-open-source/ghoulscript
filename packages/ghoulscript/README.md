@@ -56,17 +56,21 @@ await fs.writeFile(resolve(__dirname, './sample.compressed.pdf'), output)
 
 #### CompressOptions
 
-| Options                   |   Type    | Default  | Description                                                                        |
-|---------------------------|:---------:|:--------:|------------------------------------------------------------------------------------|
-| `password`                | `String`  |    -     | Document protection password                                                       |
-| `pdfSettings`             | `String`  | `screen` | Preset setting, valid value is `screen`, `ebook`, `printer`, `prepress`, `default` |
-| `fastWebView`             | `Boolean` |  `true`  | Enable Fast Web View (Linearization)                                               |
-| `compatibilityLevel`      | `String`  |  `1.4`   | Compability version                                                                |
-| `colorConversionStrategy` | `String`  |  `RGB`   | Color conversion strategy, valid value is `RGB`, `CMYK`                            |
-| `noTransparency`          | `Boolean` |  `true`  | Remove transparency                                                                |
-| `keepPassword`            | `Boolean` |  `true`  | Keep document password if document have a password protection                      |
-| `userPassword`            | `String`  |    -     | Set User Password to document                                                      |
-| `ownerPassword`           | `String`  |    -     | Set Owner Password to document                                                     |
+| Options                   |    Type    | Default  | Description                                                                        |
+|---------------------------|:----------:|:--------:|------------------------------------------------------------------------------------|
+| `password`                |  `String`  |    -     | Document protection password                                                       |
+| `pdfSettings`             |  `String`  | `screen` | Preset setting, valid value is `screen`, `ebook`, `printer`, `prepress`, `default` |
+| `fastWebView`             | `Boolean`  |  `true`  | Enable Fast Web View (Linearization)                                               |
+| `compatibilityLevel`      |  `String`  |  `1.4`   | Compability version                                                                |
+| `colorConversionStrategy` |  `String`  |  `RGB`   | Color conversion strategy, valid value is `RGB`, `CMYK`                            |
+| `noTransparency`          | `Boolean`  |  `true`  | Remove transparency                                                                |
+| `keepPassword`            | `Boolean`  |  `true`  | Keep document password if document have a password protection                      |
+| `userPassword`            |  `String`  |    -     | Set User Password to document                                                      |
+| `ownerPassword`           |  `String`  |    -     | Set Owner Password to document                                                     |
+| `colorImageResolution`    |  `Number`  |   300    | Color image resolution                                                             |
+| `grayImageResolution`     |  `Number`  |   300    | Gray image resolution                                                              |
+| `monoImageResolution`     |  `Number`  |   300    | Mono image resolution                                                              |
+| `args`                    | `String[]` |    -     | Additional arguments                                                               |
 
 ### combinePDF (files: Buffer[], options?: CompressOptions)
 
@@ -141,12 +145,13 @@ await fs.writeFile(resolve(__dirname, './sample.jpg'), output)
 
 #### RenderOptions
 
-| Options             |   Type   | Default | Description                                  |
-|---------------------|:--------:|:-------:|----------------------------------------------|
-| `resolution`        | `Number` |  `96`   | Render resolution                            |
-| `textAlphaBits`     | `Number` |   `4`   | Text alpha bits, valid value is `1`-`4`      |
-| `graphicsAlphaBits` | `Number` |   `4`   | Graphic alpha bits, valid value is `1`-`4`   |
-| `format`            | `String` |  `jpg`  | Render format, valid value is `jpg` or `png` |
+| Options             |    Type    | Default | Description                                  |
+|---------------------|:----------:|:-------:|----------------------------------------------|
+| `resolution`        |  `Number`  |  `96`   | Render resolution                            |
+| `textAlphaBits`     |  `Number`  |   `4`   | Text alpha bits, valid value is `1`-`4`      |
+| `graphicsAlphaBits` |  `Number`  |   `4`   | Graphic alpha bits, valid value is `1`-`4`   |
+| `format`            |  `String`  |  `jpg`  | Render format, valid value is `jpg` or `png` |
+| `args`              | `String[]` |    -    | Additional arguments                         |
 
 ## getInfo (file: Buffer, options?: { password: string })
 
