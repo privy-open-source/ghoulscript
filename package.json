@@ -19,7 +19,7 @@
     ]
   },
   "devDependencies": {
-    "@privyid/eslint-config-persona": "1.0.0-rc.6",
+    "@privyid/eslint-config-persona": "1.0.0-rc.7",
     "@tsconfig/node20": "20.1.4",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
