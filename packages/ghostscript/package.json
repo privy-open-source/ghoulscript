@@ -3,7 +3,7 @@
   "description": "Ghostscript compiled to WebAssembly",
   "version": "0.1.0-alpha.1",
   "gsVersion": "10.03.1",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "yarn@4.3.1",
   "type": "module",
   "main": "./dist/gs.cjs",
   "module": "./dist/gs.js",
