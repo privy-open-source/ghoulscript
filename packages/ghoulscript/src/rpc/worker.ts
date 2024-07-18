@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /* eslint-env serviceworker */
 
-import type { RPC } from './rpc'
-import { callRPC } from './rpc'
+import type { RPC } from '.'
+import { callRPC } from './call'
 
 self.addEventListener('message', (event: MessageEvent<RPC>) => {
   const rpc = event.data

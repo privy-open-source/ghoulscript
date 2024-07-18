@@ -1,13 +1,10 @@
-import * as core from './core'
-import RpcWorker from './rpc.worker?worker&inline'
 
-export type Core = typeof core
-
-export type Commands = keyof Core
-
-export type CommandArgs<C extends Commands> = Parameters<Core[C]>
-
-export type CommandResult<C extends Commands> = ReturnType<Core[C]>
+import type {
+  CommandArgs,
+  CommandResult,
+  Commands,
+} from './call'
+import { useRef } from '../utils/use-ref'
 
 export interface RPC <C extends Commands = any> {
   id: number,
@@ -21,17 +18,30 @@ export interface RPCResult<C extends Commands = any> {
   error?: undefined,
 }
 
-let worker: Worker
+const worker    = useRef<Worker>()
+const isLoading = useRef(false)
 
 export async function useWorkerRPC () {
-  if (!worker)
-    worker = new RpcWorker({ name: 'rpc-worker' })
+  if (isLoading.value)
+    await isLoading.toBe(false)
 
-  return worker
+  if (!worker.value) {
+    isLoading.value = true
+
+    try {
+      const { default: RpcWorker } = await import('./worker?worker&inline')
+
+      worker.value = new RpcWorker({ name: 'rpc-worker' })
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  return worker.value
 }
 
 export function setWorkerRPC (worker_: Worker) {
-  worker = worker_
+  worker.value = worker_
 }
 
 export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>> (name: C, args: A) {
@@ -69,8 +79,4 @@ export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>
       args: args,
     })
   })
-}
-
-export async function callRPC<C extends Commands> (name: C, args: CommandArgs<C>): Promise<CommandResult<C>> {
-  return await (core[name] as (...args: any[]) => Promise<any>)(...args)
 }

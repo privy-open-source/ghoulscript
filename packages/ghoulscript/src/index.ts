@@ -1,13 +1,14 @@
+/* eslint-disable unicorn/no-await-expression-member */
 import { useConfig } from './config'
 import type {
   CommandArgs,
   CommandResult,
   Commands,
-} from './rpc'
+} from './rpc/call'
 import {
-  callRPC,
   callWorkerRPC,
 } from './rpc'
+import { callLocalRPC } from './rpc/worker.local'
 import type * as core from './core'
 
 export {
@@ -21,7 +22,7 @@ export {
 async function call <C extends Commands> (name: C, args: CommandArgs<C>): Promise<CommandResult<C>> {
   return useConfig().useWorker
     ? callWorkerRPC(name, args)
-    : callRPC(name, args)
+    : callLocalRPC(name, args)
 }
 
 export const optimizePDF: typeof core.optimizePDF = async (...args: CommandArgs<'optimizePDF'>): CommandResult<'optimizePDF'> => {

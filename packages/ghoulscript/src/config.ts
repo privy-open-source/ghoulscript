@@ -8,7 +8,7 @@ export interface Config {
   useWorker: boolean,
 }
 
-const config: Config = { useWorker: typeof window !== 'undefined' }
+const config: Config = { useWorker: typeof window !== 'undefined' && !!window.Worker }
 
 export function useConfig () {
   return config
