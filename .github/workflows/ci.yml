@@ -50,6 +50,9 @@ jobs:
           version: 1.38.40
           actions-cache-folder: 'emsdk-cache'
 
+      - name: Use Corepack
+        run: corepack enable
+
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
