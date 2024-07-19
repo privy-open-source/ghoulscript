@@ -44,19 +44,6 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Get Cache Dir
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-
-      - name: Use Cache
-        uses: actions/cache@v4
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Use EMSDK
         uses: mymindstorm/setup-emsdk@v14
         with:
