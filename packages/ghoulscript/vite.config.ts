@@ -12,18 +12,10 @@ export default defineConfig({
   build: {
     minify: false,
     lib   : {
-      entry  : 'src/index',
-      name   : 'Ghoulscript',
-      formats: ['cjs', 'es'],
-      fileName (format, entryName) {
-        const EXT: Record<string, string> = {
-          cjs: '.cjs',
-          es : '.mjs',
-          umd: '.umd.cjs',
-        }
-
-        return `${entryName}${EXT[format] ?? '.js'}`
-      },
+      entry   : 'src/index',
+      name    : 'Ghoulscript',
+      formats : ['cjs', 'es'],
+      fileName: 'index',
     },
   },
 })

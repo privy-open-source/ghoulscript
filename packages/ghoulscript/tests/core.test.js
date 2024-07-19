@@ -14,7 +14,7 @@ import {
   removePassword,
   isRequirePassword,
   getInfo,
-} from '../dist/index.mjs'
+} from '../dist/index.js'
 
 const _filename = fileURLToPath(import.meta.url)
 const _dirname  = dirname(_filename)
