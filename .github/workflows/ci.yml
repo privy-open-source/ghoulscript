@@ -11,6 +11,10 @@ on:
   merge_group:
     types: [checks_requested]
 
+env:
+  NODE_VERSION: 20
+  EM_VERSION: 3.1.63
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -20,6 +24,11 @@ jobs:
       contents: read
       security-events: write
 
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript-typescript', 'c-cpp']
+
     steps:
       - name: Git Checkout
         uses: actions/checkout@v4
@@ -27,7 +36,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript
+          languages: ${{ matrix.language }}
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
@@ -44,19 +53,19 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Use EMSDK
+      - name: Use EMSDK ${{ env.EM_VERSION }}
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: 3.1.63
-          actions-cache-folder: 'emsdk-cache'
+          version: ${{ env.EM_VERSION }}
+          actions-cache-folder: '.emsdk'
 
       - name: Use Corepack
         run: corepack enable
 
-      - name: Use Node.js 20
+      - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: "yarn"
 
       - name: Install Deps
@@ -67,3 +76,6 @@ jobs:
 
       - name: Run Linter
         run: yarn lint
+
+      - name: Run Test
+        run: yarn test
