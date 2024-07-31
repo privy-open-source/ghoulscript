@@ -31,6 +31,7 @@
   "dependencies": {
     "@privyid/ghostscript": "workspace:^",
     "defu": "^6.1.4",
+    "sref": "^1.0.1",
     "ufo": "^1.5.3"
   },
   "license": "AGPL-3.0-only",

@@ -4,7 +4,7 @@ import type {
   CommandResult,
   Commands,
 } from './call'
-import { useRef } from '../utils/use-ref'
+import useRef from 'sref'
 
 export interface RPC <C extends Commands = any> {
   id: number,
