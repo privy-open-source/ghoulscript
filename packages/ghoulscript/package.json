@@ -22,7 +22,7 @@
     "test": "node --test"
   },
   "devDependencies": {
-    "typescript": "5.5.3",
+    "typescript": "5.5.4",
     "vite": "5.3.4",
     "vite-plugin-dts": "3.9.1",
     "vite-plugin-externalize-deps": "0.8.0",
