@@ -9,6 +9,7 @@ export default defineConfig({
     nodePolyfills(),
     externalizeDeps(),
   ],
+  base : './',
   build: {
     minify: false,
     lib   : {

@@ -22,6 +22,7 @@
     "test": "node --test"
   },
   "devDependencies": {
+    "@types/uuid": "^10",
     "typescript": "5.5.4",
     "vite": "5.3.4",
     "vite-plugin-dts": "3.9.1",
@@ -31,7 +32,9 @@
   "dependencies": {
     "@privyid/ghostscript": "workspace:^",
     "defu": "^6.1.4",
-    "ufo": "^1.5.3"
+    "sref": "^1.0.1",
+    "ufo": "^1.5.3",
+    "uuid": "^10.0.0"
   },
   "license": "AGPL-3.0-only",
   "publishConfig": {
