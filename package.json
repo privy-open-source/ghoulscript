@@ -1,6 +1,6 @@
 {
   "name": "@privyid/ghoulscript-monorepo",
-  "packageManager": "yarn@4.4.0",
+  "packageManager": "yarn@4.5.0",
   "private": true,
   "workspaces": [
     "packages/*",
