@@ -8,9 +8,13 @@ export type CommandArgs<C extends Commands> = Parameters<Core[C]>
 
 export type CommandResult<C extends Commands> = ReturnType<Core[C]>
 
+const $core = new Map(Object.entries(core))
+
 export async function callRPC<C extends Commands> (method: C, params: CommandArgs<C>): Promise<CommandResult<C>> {
-  if (!Object.prototype.hasOwnProperty.call(core, method) || typeof core[method] !== 'function')
+  const command: ((...args: any[]) => Promise<any>) | undefined = $core.get(method)
+
+  if (typeof command !== 'function')
     throw new TypeError(`Invalid action: "${method}"`)
 
-  return await (core[method] as (...args: any[]) => Promise<any>)(...params)
+  return await command(...params)
 }
