@@ -1,24 +1,26 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /* eslint-env serviceworker */
 
-import type { RPC } from '.'
+import type { RPCRequest } from '.'
 import { callRPC } from './call'
 
-self.addEventListener('message', (event: MessageEvent<RPC>) => {
+self.addEventListener('message', (event: MessageEvent<RPCRequest>) => {
   const rpc = event.data
   const id  = rpc.id
 
-  callRPC(rpc.name, rpc.args)
+  callRPC(rpc.method, rpc.params)
     .then((result) => {
       self.postMessage({
-        id,
-        result,
+        jsonrpc: '2.0',
+        id     : id,
+        result : result,
       })
     })
     .catch((error) => {
       self.postMessage({
-        id,
-        error,
+        jsonrpc: '2.0',
+        id     : id,
+        error  : error,
       })
     })
 })

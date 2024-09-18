@@ -153,7 +153,7 @@ await fs.writeFile(resolve(__dirname, './sample.jpg'), output)
 | `format`            |  `String`  |  `jpg`  | Render format, valid value is `jpg` or `png` |
 | `args`              | `String[]` |    -    | Additional arguments                         |
 
-## getInfo (file: Buffer, options?: { password: string })
+### getInfo (file: Buffer, options?: { password: string })
 
 Extract pages info
 
@@ -188,7 +188,7 @@ console.log(info)
 */
 ```
 
-## isRequirePassword (file: Buffer)
+### isRequirePassword (file: Buffer)
 
 Check document is require password or not to open.
 

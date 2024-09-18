@@ -5,15 +5,18 @@ import type {
   Commands,
 } from './call'
 import useRef from 'sref'
+import { v7 as uuid } from 'uuid'
 
-export interface RPC <C extends Commands = any> {
-  id: number,
-  name: C,
-  args: CommandArgs<C>,
+export interface RPCRequest <C extends Commands = any> {
+  jsonrpc: '2.0',
+  id: number | string,
+  method: C,
+  params: CommandArgs<C>,
 }
 
-export interface RPCResult<C extends Commands = any> {
-  id: number,
+export interface RPCResponse<C extends Commands = any> {
+  jsonrpc: '2.0',
+  id: number | string,
   result: CommandResult<C>,
   error?: undefined,
 }
@@ -29,7 +32,7 @@ export async function useWorkerRPC () {
     isLoading.value = true
 
     try {
-      const { default: RpcWorker } = await import('./worker?worker&inline')
+      const { default: RpcWorker } = await import('./worker?worker')
 
       worker.value = new RpcWorker({ name: 'rpc-worker' })
     } finally {
@@ -44,12 +47,12 @@ export function setWorkerRPC (worker_: Worker) {
   worker.value = worker_
 }
 
-export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>> (name: C, args: A) {
-  const id     = Date.now()
+export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>> (method: C, params: A) {
+  const id     = uuid()
   const worker = await useWorkerRPC()
 
   return await new Promise<CommandResult<C>>((resolve, reject) => {
-    const onMessage = (event: MessageEvent<RPCResult<C>>) => {
+    const onMessage = (event: MessageEvent<RPCResponse<C>>) => {
       if (event.data.id === id) {
         cleanUp()
 
@@ -74,9 +77,10 @@ export async function callWorkerRPC<C extends Commands, A extends CommandArgs<C>
     worker.addEventListener('error', onError)
 
     worker.postMessage({
-      id  : id,
-      name: name,
-      args: args,
+      jsonrpc: '2.0',
+      id     : id,
+      method : method,
+      params : params,
     })
   })
 }
