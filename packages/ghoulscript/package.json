@@ -34,7 +34,7 @@
     "defu": "^6.1.4",
     "sref": "^1.0.1",
     "ufo": "^1.5.3",
-    "uuid": "^10.0.0"
+    "uuid": "^11.0.0"
   },
   "license": "AGPL-3.0-only",
   "publishConfig": {
