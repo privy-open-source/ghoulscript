@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/emscripten": "1.39.13",
-    "vitest": "2.1.4"
+    "vitest": "2.1.8"
   },
   "license": "AGPL-3.0-only",
   "publishConfig": {
