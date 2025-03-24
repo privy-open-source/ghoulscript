@@ -442,9 +442,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privyid/eslint-config-persona@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@privyid/eslint-config-persona@npm:1.1.0"
+"@privyid/eslint-config-persona@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@privyid/eslint-config-persona@npm:1.1.1"
   peerDependencies:
     "@typescript-eslint/eslint-plugin": 5.62.0
     "@typescript-eslint/parser": 5.62.0
@@ -461,7 +461,7 @@ __metadata:
     eslint-plugin-varspacing: 1.2.2
     eslint-plugin-vue: 9.23.0
     typescript: 5.6.3
-  checksum: 10c0/146ee709bb6ba35efec7e1814aea8dc8fcf287ad7774f73a0e7fb8701cbf6c3a8b2e567e22275a2d50a1176bc332ab764998c23dc71efc060bfa7523f4356833
+  checksum: 10c0/9072f99442afafb3d61c660f51f66b6e6ffb538f50e9edd44f5e17371333ef1d5e70e532a934c36494d40f2c75586b7ada0e2b590b48ec95da21b0fab77cdd65
   languageName: node
   linkType: hard
 
@@ -478,7 +478,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@privyid/ghoulscript-monorepo@workspace:."
   dependencies:
-    "@privyid/eslint-config-persona": "npm:1.1.0"
+    "@privyid/eslint-config-persona": "npm:1.1.1"
     "@tsconfig/node20": "npm:20.1.5"
     "@typescript-eslint/eslint-plugin": "npm:5.62.0"
     "@typescript-eslint/parser": "npm:5.62.0"
