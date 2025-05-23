@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "typescript": "5.8.2",
-    "vite": "6.1.6"
+    "vite": "6.3.5"
   },
   "dependencies": {
     "@privyid/ghoulscript": "workspace:^"
