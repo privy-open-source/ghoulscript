@@ -705,7 +705,7 @@ __metadata:
     uuid: "npm:^11.0.0"
     vite: "npm:6.4.3"
     vite-plugin-dts: "npm:4.5.3"
-    vite-plugin-externalize-deps: "npm:0.9.0"
+    vite-plugin-externalize-deps: "npm:0.10.0"
     vite-plugin-node-polyfills: "npm:0.23.0"
   languageName: unknown
   linkType: soft
@@ -7123,12 +7123,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-externalize-deps@npm:0.9.0":
-  version: 0.9.0
-  resolution: "vite-plugin-externalize-deps@npm:0.9.0"
+"vite-plugin-externalize-deps@npm:0.10.0":
+  version: 0.10.0
+  resolution: "vite-plugin-externalize-deps@npm:0.10.0"
   peerDependencies:
-    vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
-  checksum: 10c0/8f8857412163688c0b4bd2f38a592401082ebf0e1387073946d0d821c4baa749e21a74ef87011136efd04e253196627a7ee6eea1545347a835cf8a49618df93f
+    vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
+  checksum: 10c0/8152983f657e201a8b4289ca3bdedf3b86cdbb45504f56907fcd33f4da4b9cbb1724c2e3510f16a5905e8540a85688fcd4d9443f3b9474f7a43350cc2d3e66a8
   languageName: node
   linkType: hard
 
