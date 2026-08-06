@@ -12,7 +12,6 @@ on:
     types: [checks_requested]
 
 env:
-  NODE_VERSION: 20
   EM_VERSION: 3.1.63
 
 jobs:
@@ -57,10 +56,10 @@ jobs:
       - name: Use Corepack
         run: corepack enable
 
-      - name: Use Node.js ${{ env.NODE_VERSION }}
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: "yarn"
 
       - name: Install Deps
