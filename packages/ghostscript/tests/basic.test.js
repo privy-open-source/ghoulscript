@@ -31,11 +31,8 @@ async function callMain (args) {
 }
 
 describe('Main functionality', () => {
-  before((done) => {
-    fs.mkdir(`${_dirname}/out/`, (err) => {
-      if (!err)
-        done()
-    })
+  before(async () => {
+    await fs.promises.mkdir(`${_dirname}/out/`, { recursive: true })
   })
 
   it('should run --help', async () => {
