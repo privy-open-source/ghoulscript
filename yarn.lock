@@ -651,7 +651,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@privyid/ghostscript@workspace:packages/ghostscript"
   dependencies:
-    "@types/emscripten": "npm:1.40.1"
+    "@types/emscripten": "npm:1.41.5"
     vitest: "npm:3.2.6"
   languageName: unknown
   linkType: soft
@@ -1162,10 +1162,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/emscripten@npm:1.40.1":
-  version: 1.40.1
-  resolution: "@types/emscripten@npm:1.40.1"
-  checksum: 10c0/0d6cd29e551f85ba49a0e7d58de16c857960d40e57553e7cc2860b7d80c4210c992ed292998ec3fd3bdc3b41d96541e91d01a6c232106ac0ad79b4710e87f38d
+"@types/emscripten@npm:1.41.5":
+  version: 1.41.5
+  resolution: "@types/emscripten@npm:1.41.5"
+  checksum: 10c0/ae816da716f896434e59df7a71b67c71ae7e85ca067a32aef1616572fc4757459515d42ade6f5b8fd8d69733a9dbd0cf23010fec5b2f41ce52c09501aa350e45
   languageName: node
   linkType: hard
 
