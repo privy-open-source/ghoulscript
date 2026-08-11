@@ -83,6 +83,7 @@ export interface CompressOptions {
 }
 
 type InputFile = ArrayBufferView | Blob
+type GSInstance = Awaited<ReturnType<typeof useGS>>
 
 async function readFile (input: InputFile): Promise<ArrayBufferView> {
   if (input instanceof globalThis.Blob)
@@ -91,63 +92,25 @@ async function readFile (input: InputFile): Promise<ArrayBufferView> {
   return input
 }
 
-/**
- * Try to resolve a PageList to a single contiguous `{ start, end }` range so
- * we can use `-dFirstPage`/`-dLastPage`, which the `pdfwrite` device on
- * ghostscript 10.07+ actually honours. Returns `null` if the input can't be
- * collapsed to a single range (mixed pages or disjoint ranges), letting the
- * caller fall back to `-sPageList=`.
- */
-function normalizePageList (pageList: PageList): PageRange | undefined {
-  const ranges: Array<PageRange | undefined> = []
-  let canCollapse                            = true
+async function createGS (): Promise<{ gs: GSInstance, errors: string[] }> {
+  const errors: string[] = []
 
-  for (const page of pageList) {
-    let range: PageRange | undefined
+  const gs = await useGS({
+    print () {},
+    printErr (str) {
+      if (str.includes('This file requires a password for access'))
+        errors.push('required')
+      else if (str.includes('Password did not work'))
+        errors.push('invalid')
+    },
+  })
 
-    if (Array.isArray(page))
-      range = { start: page[0], end: page[1] }
-    else if (typeof page === 'object' && page !== null)
-      range = { start: page.start, end: page.end }
-    else if (typeof page === 'number')
-      range = { start: page, end: page }
-    else {
-      // String form: "1", "1-3", "1,5,9" — handle single and range
-      // strings, but multi-page comma-lists fall back to -sPageList.
-      const str = page.toString()
-
-      if (/^\d+$/.test(str))
-        range = { start: Number(str), end: Number(str) }
-      else {
-        const m = /^(\d+)-(\d+)$/.exec(str)
-
-        if (m)
-          range = { start: Number(m[1]), end: Number(m[2]) }
-      }
-    }
-
-    if (!range) {
-      canCollapse = false
-      break
-    }
-
-    ranges.push(range)
-  }
-
-  if (!canCollapse)
-    return undefined
-
-  // Collapse to a single contiguous range covering all entries
-  const start = Math.min(...(ranges as PageRange[]).map((r) => r.start))
-  const end   = Math.max(...(ranges as PageRange[]).map((r) => r.end))
-
-  return { start, end }
+  return { gs, errors }
 }
 
-async function createPDF (inputs: InputFile[], options: Partial<CompressOptions> & { outputFilename?: string } = {}): Promise<Uint8Array> {
-  const { outputFilename, ...rest } = options
-  const gs                          = await useGS({ print () {}, printErr () {} })
-  const opts                        = defu<CompressOptions, [Partial<CompressOptions>]>(rest, {
+async function createPDF (inputs: InputFile[], options: Partial<CompressOptions> = {}): Promise<Uint8Array> {
+  const { gs, errors } = await createGS()
+  const opts           = defu<CompressOptions, [CompressOptions]>(options, {
     pdfSettings            : 'screen',
     compatibilityLevel     : '1.4',
     colorConversionStrategy: 'RGB',
@@ -188,31 +151,21 @@ async function createPDF (inputs: InputFile[], options: Partial<CompressOptions>
     args.push('-dNOTRANSPARENCY')
 
   if (opts.pageList) {
-    const range = normalizePageList(opts.pageList)
+    const pageList = Array.isArray(opts.pageList)
+      ? opts.pageList
+        .map((page) => {
+          if (Array.isArray(page))
+            return `${page[0]}-${page[1]}`
 
-    if (range)
-      args.push(`-dFirstPage=${range.start}`, `-dLastPage=${range.end}`)
-    else {
-      // Fall back to comma-joined -sPageList=… for consumers that pass an
-      // array of disjoint ranges or mixed shapes. Note: -sPageList is only
-      // honoured by some device families (e.g. tiffsep). For pdfwrite on
-      // ghostscript 10.07+ prefer -dFirstPage/-dLastPage.
-      const pageList = Array.isArray(opts.pageList)
-        ? opts.pageList
-          .map((page) => {
-            if (Array.isArray(page))
-              return `${page[0]}-${page[1]}`
+          if (typeof page === 'object' && page !== null)
+            return `${page.start}-${page.end}`
 
-            if (typeof page === 'object' && page !== null)
-              return `${page.start}-${page.end}`
+          return page.toString()
+        })
+        .join(',')
+      : opts.pageList
 
-            return page.toString()
-          })
-          .join(',')
-        : opts.pageList
-
-      args.push(`-sPageList=${pageList}`)
-    }
+    args.push(`-sPageList=${pageList}`)
   }
 
   args.push(
@@ -223,7 +176,7 @@ async function createPDF (inputs: InputFile[], options: Partial<CompressOptions>
     `-dColorImageResolution=${opts.colorImageResolution}`,
     `-dGrayImageResolution=${opts.grayImageResolution}`,
     `-dMonoImageResolution=${opts.monoImageResolution}`,
-    `-sOutputFile=${outputFilename ?? './output'}`,
+    '-sOutputFile=./output',
   )
 
   for (const [i, input] of inputs.entries()) {
