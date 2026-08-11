@@ -24,6 +24,15 @@ async function createMeta () {
   await copyFile(resolve(_dirname, './meta.d.ts'), resolve(_dirname, '../dist/meta.d.ts'))
 }
 
+async function updateReadme () {
+  const pkgJSON    = JSON.parse(await readFile(resolve(_dirname, '../package.json')))
+  const readmePath = resolve(_dirname, '../README.md')
+  const readme     = await readFile(readmePath, 'utf8')
+  const updated    = readme.replace(/GS version `[\d.]+`/, `GS version \`${pkgJSON.gsVersion}\``)
+
+  await writeFile(readmePath, updated)
+}
+
 async function createDTS () {
   const emscriptenDTS = await readFile(resolve(_dirname, '../../../node_modules/@types/emscripten/index.d.ts'))
   const gsDTS         = await readFile(resolve(_dirname, './gs.d.ts'))
@@ -34,6 +43,7 @@ async function createDTS () {
 async function main () {
   await createMeta()
   await createDTS()
+  await updateReadme()
 }
 
 main()

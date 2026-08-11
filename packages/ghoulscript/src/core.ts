@@ -83,6 +83,7 @@ export interface CompressOptions {
 }
 
 type InputFile = ArrayBufferView | Blob
+type GSInstance = Awaited<ReturnType<typeof useGS>>
 
 async function readFile (input: InputFile): Promise<ArrayBufferView> {
   if (input instanceof globalThis.Blob)
@@ -91,9 +92,25 @@ async function readFile (input: InputFile): Promise<ArrayBufferView> {
   return input
 }
 
+async function createGS (): Promise<{ gs: GSInstance, errors: string[] }> {
+  const errors: string[] = []
+
+  const gs = await useGS({
+    print () {},
+    printErr (str) {
+      if (str.includes('This file requires a password for access'))
+        errors.push('required')
+      else if (str.includes('Password did not work'))
+        errors.push('invalid')
+    },
+  })
+
+  return { gs, errors }
+}
+
 async function createPDF (inputs: InputFile[], options: Partial<CompressOptions> = {}): Promise<Uint8Array> {
-  const gs   = await useGS({ print () {}, printErr () {} })
-  const opts = defu<CompressOptions, [CompressOptions]>(options, {
+  const { gs, errors } = await createGS()
+  const opts           = defu<CompressOptions, [CompressOptions]>(options, {
     pdfSettings            : 'screen',
     compatibilityLevel     : '1.4',
     colorConversionStrategy: 'RGB',
@@ -170,6 +187,9 @@ async function createPDF (inputs: InputFile[], options: Partial<CompressOptions>
   }
 
   await gs.callMain(args)
+
+  if (errors.length > 0)
+    throw new Error(`PDF password error: ${errors.join('; ')}`)
 
   return gs.FS.readFile('./output', { encoding: 'binary' })
 }
@@ -322,7 +342,7 @@ export async function getInfo (input: InputFile, options: Pick<CompressOptions, 
   }
 
   const gs = await useGS({
-    printErr (str) {
+    print (str) {
       const totalpageMatch = str.match(/File has (\d+) pages?/)
 
       if (totalpageMatch)

@@ -3,7 +3,7 @@
 
 > [!NOTE]
 > This is low-level WebAssembly library which part of [@privyid/ghoulscript](https://www.npmjs.com/package/@privyid/ghoulscript).
-> This use GS version `10.03.1`
+> This use GS version `10.07.1`
 
 ## Installation
 

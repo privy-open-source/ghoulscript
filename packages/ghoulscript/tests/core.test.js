@@ -26,6 +26,39 @@ describe('optimizePDF', () => {
 
     assert.ok(output.byteLength < input.byteLength)
   })
+
+  it('should throw when input requires password', async () => {
+    const input = await fs.readFile(resolve(_dirname, './sample.protected.pdf'))
+
+    await assert.rejects(
+      async () => await optimizePDF(input),
+      /password/i,
+    )
+  })
+})
+
+describe('getInfo', () => {
+  it('should return correct page count and dimensions', async () => {
+    const input = await fs.readFile(resolve(_dirname, './sample.pdf'))
+    const info  = await getInfo(input)
+
+    assert.equal(info.numPages, 11)
+    assert.equal(info.pages.length, 11)
+    assert.equal(info.pages[0].page, 1)
+    assert.equal(info.pages[0].width, 595)
+    assert.equal(info.pages[0].height, 842)
+  })
+
+  it('should return correct info for single-page PDF', async () => {
+    const input = await fs.readFile(resolve(_dirname, './sample-2.pdf'))
+    const info  = await getInfo(input)
+
+    assert.equal(info.numPages, 1)
+    assert.equal(info.pages.length, 1)
+    assert.equal(info.pages[0].page, 1)
+    assert.ok(info.pages[0].width > 0)
+    assert.ok(info.pages[0].height > 0)
+  })
 })
 
 describe('combinePDF', () => {

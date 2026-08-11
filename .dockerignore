@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+.gitattributes
+.gitmodules
+
+# Submodule contents (replaced by mounted context in CI)
+packages/ghostscript/ghostpdl
+packages/ghostscript/out
+packages/ghostscript/dist
+packages/ghostscript/build/arch_wasm.h.tmp
+
+# Node
+node_modules
+.yarn/cache
+.yarn/install-state.gz
+.yarn/build-state.yml
+.pnp.*
+
+# Build outputs
+dist
+build
+*.tsbuildinfo
+
+# Logs / runtime data
+*.log
+coverage
+.nyc_output
+.DS_Store
+
+# IDE / editor
+.idea
+.vscode
+*.swp
+
+# CI / docs (not needed in build context)
+.github
+README.md
+*.md
+LICENSE
+STEERING.md
+AGENT.md
+Dockerfile
+.dockerignore
+
+# Playground (not needed for ghostscript WASM build)
+playground
+
+# Other packages
+packages/ghoulscript
+
+# Generated test artifacts
+**/fixtures/*.pdf
+**/snapshots
