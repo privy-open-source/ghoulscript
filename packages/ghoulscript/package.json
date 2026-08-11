@@ -22,7 +22,7 @@
     "test": "node --test"
   },
   "devDependencies": {
-    "@types/uuid": "10.0.0",
+    "@types/uuid": "11.0.0",
     "typescript": "5.8.2",
     "vite": "6.4.3",
     "vite-plugin-dts": "4.5.4",
