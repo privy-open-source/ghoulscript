@@ -26,7 +26,7 @@
 # ── Stage 1: builder ───────────────────────────────────────────────────────────
 FROM node:24-alpine AS builder
 
-ARG EMSDK_TAG=3.1.63
+ARG EMSDK_TAG=6.0.6
 
 # System deps for emsdk and the Ghostscript build
 RUN apk add --no-cache \

@@ -1,5 +1,5 @@
 # @privyid/ghoulscript
-> Compress, merge, split, and render pages to image using Ghostscript
+> Compress, merge, split, and render PDFs with Ghostscript in the browser and Node.js
 
 ## Installation
 
@@ -9,25 +9,27 @@ yarn add @privyid/ghoulscript
 
 ## How to Use
 
-### Using on Browser (Vite)
+### Browser
 
 ```ts
 import { optimizePDF } from '@privyid/ghoulscript'
 
-const input = document.querySelector('input[type="file"]')
+const input = document.querySelector<HTMLInputElement>('#file')
 
-input.addEventListener('change', async () => {
+input?.addEventListener('change', async () => {
   if (input.files) {
-    const file      = input.files[0]
-    const output    = await optimizePDF(file)
-    const outputURL = URL.createObjectURL(new Blob([output], { type: 'application/pdf' }))
+    const file    = input.files[0]
+    const output  = await optimizePDF(file)
+    const blob    = new Blob([output], { type: 'application/pdf' })
+    const url     = URL.createObjectURL(blob)
 
-    window.open(outputURL, '_blank')
+    window.open(url, '_blank')
   }
 })
 ```
 
-### Using on NodeJS
+### NodeJS
+
 ```ts
 import fs from 'node:fs/promises'
 import { resolve } from 'node:path'
@@ -41,9 +43,9 @@ await fs.writeFile(resolve(__dirname, './sample.compressed.pdf'), output)
 
 ## Utilities
 
-### optimizePDF (file: Buffer, options?: CompressOptions)
+### optimizePDF (input: InputFile, options?: Partial<CompressOptions>)
 
-Compress and optimize PDF for Web Viewer.
+Compress and optimize a PDF for web viewing.
 
 ```ts
 import { optimizePDF } from '@privyid/ghoulscript'
@@ -56,25 +58,26 @@ await fs.writeFile(resolve(__dirname, './sample.compressed.pdf'), output)
 
 #### CompressOptions
 
-| Options                   |    Type    | Default  | Description                                                                        |
-|---------------------------|:----------:|:--------:|------------------------------------------------------------------------------------|
-| `password`                |  `String`  |    -     | Document protection password                                                       |
-| `pdfSettings`             |  `String`  | `screen` | Preset setting, valid value is `screen`, `ebook`, `printer`, `prepress`, `default` |
-| `fastWebView`             | `Boolean`  |  `true`  | Enable Fast Web View (Linearization)                                               |
-| `compatibilityLevel`      |  `String`  |  `1.4`   | Compability version                                                                |
-| `colorConversionStrategy` |  `String`  |  `RGB`   | Color conversion strategy, valid value is `RGB`, `CMYK`                            |
-| `noTransparency`          | `Boolean`  |  `true`  | Remove transparency                                                                |
-| `keepPassword`            | `Boolean`  |  `true`  | Keep document password if document have a password protection                      |
-| `userPassword`            |  `String`  |    -     | Set User Password to document                                                      |
-| `ownerPassword`           |  `String`  |    -     | Set Owner Password to document                                                     |
-| `colorImageResolution`    |  `Number`  |   300    | Color image resolution                                                             |
-| `grayImageResolution`     |  `Number`  |   300    | Gray image resolution                                                              |
-| `monoImageResolution`     |  `Number`  |   300    | Mono image resolution                                                              |
-| `args`                    | `String[]` |    -     | Additional arguments                                                               |
+| Option                    | Type                                                          | Default    | Description                                                    |
+|---------------------------|---------------------------------------------------------------|------------|----------------------------------------------------------------|
+| `password`                | `string`                                                      | —          | Password required to open the PDF                              |
+| `pdfSettings`             | `'screen' \| 'ebook' \| 'printer' \| 'prepress' \| 'default'` | `'screen'` | Lower quality presets produce smaller files                    |
+| `fastWebView`             | `boolean`                                                     | `true`     | Enable Fast Web View (linearization)                           |
+| `compatibilityLevel`      | `string`                                                      | `'1.4'`    | PDF compatibility version                                      |
+| `colorConversionStrategy` | `'RGB' \| 'CMYK'`                                             | `'RGB'`    | Output color space                                             |
+| `noTransparency`          | `boolean`                                                     | `true`     | Flatten transparency (reduces size)                            |
+| `keepPassword`            | `boolean`                                                     | `true`     | Preserve existing password if present; set `false` to strip it |
+| `userPassword`            | `string`                                                      | —          | Set a user (viewing) password                                  |
+| `ownerPassword`           | `string`                                                      | —          | Set an owner (full access) password                            |
+| `colorImageResolution`    | `number`                                                      | `300`      | Downsample color images to this DPI                            |
+| `grayImageResolution`     | `number`                                                      | `300`      | Downsample grayscale images to this DPI                        |
+| `monoImageResolution`     | `number`                                                      | `300`      | Downsample monochrome images to this DPI                       |
+| `pageList`                | `PageList`                                                    | —          | Select specific pages to keep (see [Page List](#page-list))    |
+| `args`                    | `string[]`                                                    | —          | Extra Ghostscript arguments passed verbatim                    |
 
-### combinePDF (files: Buffer[], options?: CompressOptions)
+### combinePDF (files: InputFile[], options?: Partial<CompressOptions>)
 
-Combine multiple PDF files into single PDF
+Combine multiple PDF files into a single PDF.
 
 ```ts
 import { combinePDF } from '@privyid/ghoulscript'
@@ -86,9 +89,9 @@ const output  = await combinePDF([bufferA, bufferB])
 await fs.writeFile(resolve(__dirname, './sample.combine.pdf'), output)
 ```
 
-### splitPdf (file: Buffer, pageList: PageList[], options?: CompressOptions)
+### splitPdf (input: InputFile, pageLists: PageList[], options?: Partial<CompressOptions>)
 
-Split single PDF into multiple files
+Split a single PDF into multiple files.
 
 ```ts
 import { splitPdf } from '@privyid/ghoulscript'
@@ -100,9 +103,9 @@ await fs.writeFile(resolve(__dirname, './sample.part1.pdf'), outputs[0])
 await fs.writeFile(resolve(__dirname, './sample.part2.pdf'), outputs[1])
 ```
 
-### addPassword (file: Buffer, userPassword: string, ownerPassword?: string)
+### addPassword (input: InputFile, userPassword: string, ownerPassword?: string)
 
-Set new User Password and Owner Password
+Apply a user password (and optional owner password) to a PDF.
 
 ```ts
 import { addPassword } from '@privyid/ghoulscript'
@@ -113,11 +116,11 @@ const output = await addPassword(buffer, '123456', '112233')
 await fs.writeFile(resolve(__dirname, './sample.protected.pdf'), output)
 ```
 
-It's equal to compressPDF's `userPassword` and `ownerPassword` options
+Equivalent to calling `optimizePDF` with `userPassword` and `ownerPassword`.
 
-### removePassword (file: Buffer, oldPassword: string)
+### removePassword (input: InputFile, oldPassword: string)
 
-Remove existing encrypted PDF
+Remove password protection from a PDF.
 
 ```ts
 import { removePassword } from '@privyid/ghoulscript'
@@ -128,11 +131,11 @@ const output = await removePassword(buffer, '123456')
 await fs.writeFile(resolve(__dirname, './sample.unprotected.pdf'), output)
 ```
 
-It's equal to compressPDF's `keepPassword: false`
+Equivalent to calling `optimizePDF` with `keepPassword: false` and `password`.
 
-### renderPageAsImage (file: Buffer, page: number = 1, options?: RenderOptions)
+### renderPageAsImage (input: InputFile, page?: number, options?: Partial<RenderOptions>)
 
-Convert specific page to image
+Render a PDF page to a JPEG or PNG image.
 
 ```ts
 import { renderPageAsImage } from '@privyid/ghoulscript'
@@ -145,17 +148,17 @@ await fs.writeFile(resolve(__dirname, './sample.jpg'), output)
 
 #### RenderOptions
 
-| Options             |    Type    | Default | Description                                  |
-|---------------------|:----------:|:-------:|----------------------------------------------|
-| `resolution`        |  `Number`  |  `96`   | Render resolution                            |
-| `textAlphaBits`     |  `Number`  |   `4`   | Text alpha bits, valid value is `1`-`4`      |
-| `graphicsAlphaBits` |  `Number`  |   `4`   | Graphic alpha bits, valid value is `1`-`4`   |
-| `format`            |  `String`  |  `jpg`  | Render format, valid value is `jpg` or `png` |
-| `args`              | `String[]` |    -    | Additional arguments                         |
+| Option              | Type                  | Default | Description                    |
+|---------------------|-----------------------|---------|--------------------------------|
+| `resolution`        | `number`              | `96`    | Output DPI                     |
+| `textAlphaBits`     | `1` · `2` · `3` · `4` | `4`     | Text anti-aliasing quality     |
+| `graphicsAlphaBits` | `1` · `2` · `3` · `4` | `4`     | Graphics anti-aliasing quality |
+| `format`            | `'jpg'` · `'png'`     | `'jpg'` | Output image format            |
+| `args`              | `string[]`            | —       | Extra Ghostscript arguments    |
 
-### getInfo (file: Buffer, options?: { password: string })
+### getInfo (input: InputFile, options?: { password?: string })
 
-Extract pages info
+Extract page count and dimensions from a PDF.
 
 ```ts
 import { getInfo } from '@privyid/ghoulscript'
@@ -168,29 +171,19 @@ console.log(info)
 {
   numPages: 5,
   pages: [
-    {
-      page: 1,
-      width: 612,
-      height: 792,
-    },
-    {
-      page: 2,
-      width: 612,
-      height: 792,
-    },
-    {
-      page: 3,
-      width: 612,
-      height: 792,
-    },
+    { page: 1, width: 612,  height: 792  },
+    { page: 2, width: 612,  height: 792  },
+    { page: 3, width: 612,  height: 792  },
   ]
 }
 */
 ```
 
-### isRequirePassword (file: Buffer)
+Returns `{ numPages: number, pages: Array<{ page, width, height }> }`.
 
-Check document is require password or not to open.
+### isRequirePassword (input: InputFile)
+
+Check whether a PDF is password-protected.
 
 ```ts
 import { isRequirePassword } from '@privyid/ghoulscript'
@@ -201,6 +194,27 @@ const bufferB = await fs.readFile(resolve(__dirname, './sample.protected.pdf'))
 console.log(await isRequirePassword(bufferA)) // false
 console.log(await isRequirePassword(bufferB)) // true
 ```
+
+## Worker Configuration
+
+The library runs Ghostscript inside a Web Worker in the browser by default. To run synchronously on the main thread instead:
+
+```ts
+import { configureGS } from '@privyid/ghoulscript'
+
+configureGS({ useWorker: false })
+```
+
+## Page List
+
+Each item in `splitPdf`'s page list can be written in any of these forms:
+
+| Form     | Example                                    |
+|----------|--------------------------------------------|
+| `number` | `3` — single page                          |
+| tuple    | `[1, 5]` — pages 1 through 5               |
+| object   | `{ start: 1, end: 5 }` — pages 1 through 5 |
+| string   | `'1-5'` — pages 1 through 5                |
 
 ## License
 
