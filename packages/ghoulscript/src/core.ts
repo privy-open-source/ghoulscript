@@ -188,7 +188,10 @@ async function createPDF (inputs: InputFile[], options: Partial<CompressOptions>
 
   await gs.callMain(args)
 
-  return gs.FS.readFile(outputFilename ?? './output', { encoding: 'binary' })
+  if (errors.length > 0)
+    throw new Error(`PDF password error: ${errors.join('; ')}`)
+
+  return gs.FS.readFile('./output', { encoding: 'binary' })
 }
 
 /**
@@ -220,17 +223,8 @@ export async function combinePDF (inputs: InputFile[], option: Partial<CompressO
  */
 export async function splitPdf (input: InputFile, pageLists: PageList[], option: Partial<CompressOptions> = {}): Promise<Uint8Array[]> {
   return await Promise.all(
-    pageLists.map(async (pageList, index) => {
-      // Each output gets its own on-wasm-FS filename so they don't clobber
-      // each other. (Sequentially calling createPDF — which uses a fresh
-      // gs instance per call — would also work, but parallel gives us a
-      // measurable speed-up while keeping the implementation honest.)
-      const outputFilename = `./split-output-${index}`
-
-      return await createPDF([input], {
-        ...defu({ pageList }, option),
-        outputFilename,
-      })
+    pageLists.map(async (pageList) => {
+      return await createPDF([input], defu({ pageList }, option))
     }),
   )
 }
@@ -348,7 +342,7 @@ export async function getInfo (input: InputFile, options: Pick<CompressOptions, 
   }
 
   const gs = await useGS({
-    printErr (str) {
+    print (str) {
       const totalpageMatch = str.match(/File has (\d+) pages?/)
 
       if (totalpageMatch)
