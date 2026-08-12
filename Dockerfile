@@ -67,7 +67,7 @@ RUN bash build.sh
 
 # ── Stage 2: runner ───────────────────────────────────────────────────────────
 # Tiny image for downstream consumers that want to bundle the built dist/
-FROM alpine:3.20 AS runner
+FROM alpine:3.24 AS runner
 
 RUN apk add --no-cache nodejs tini
 
