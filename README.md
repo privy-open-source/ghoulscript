@@ -1,57 +1,43 @@
 # Ghoulscript
-> PDF Utillities using Ghostscript WASM, work on Browser and NodeJS
+
+> PDF utilities for the browser and Node.js, powered by Ghostscript compiled to WebAssembly.
+> Merge, split, compress, render, and password-protect PDFs — all without a server.
+
+## Packages
+
+| Package | Description |
+|---|---|
+| [`@privyid/ghoulscript`](./packages/ghoulscript/) | Public API — `optimizePDF`, `combinePDF`, `splitPdf`, `renderPageAsImage`, etc. |
+| [`@privyid/ghostscript`](./packages/ghostscript/) | Low-level Ghostscript WASM (`gs 10.07.1`) — for power users who need raw control. |
+
+## Quick Start
+
+```bash
+yarn add @privyid/ghoulscript
+```
+
+```ts
+import { optimizePDF, combinePDF, renderPageAsImage } from '@privyid/ghoulscript'
+
+// Compress a PDF for web viewing
+const compressed = await optimizePDF(buffer, { pdfSettings: 'screen' })
+
+// Merge two PDFs
+const merged = await combinePDF([bufA, bufB])
+
+// Render page 3 as a JPEG
+const jpg = await renderPageAsImage(buffer, 3, { format: 'jpg', resolution: 150 })
+```
+
+Works in both **browser** (Web Worker) and **Node.js** (same API, no worker).
 
 ## Documentation
 
-[Read documentation here](./packages/ghoulscript/README.md)
+Full API reference and options table: [packages/ghoulscript/README.md](./packages/ghoulscript/README.md)
 
-## Building from source
+## Contributing
 
-The Ghostscript WASM build requires the [Emscripten SDK](https://emscripten.org) and runs inside a container to keep your host clean.
-
-### Prerequisites
-
-- Docker with BuildKit enabled (`DOCKER_BUILDKIT=1`)
-- Git submodule initialised:
-
-  ```bash
-  git submodule update --init packages/ghostscript/ghostpdl
-  ```
-
-### Docker build
-
-Builds `@privyid/ghostscript` into `packages/ghostscript/dist/`:
-
-```bash
-DOCKER_BUILDKIT=1 docker build \
-  --target builder \
-  -f Dockerfile \
-  . \
-  --output packages/ghostscript/dist/
-```
-
-Or build to a tarball first, then extract:
-
-```bash
-DOCKER_BUILDKIT=1 docker build \
-  --target builder \
-  -f Dockerfile \
-  . \
-  -o /tmp/ghoulscript-wasm-build.tar
-
-tar -xf /tmp/ghoulscript-wasm-build.tar -C packages/ghostscript/
-```
-
-The build clones EMSDK 3.1.63 inside the container and runs the same `./build.sh` script that CI uses. Full compilation typically takes **10–30 minutes** depending on CPU cores.
-
-### Local build (alternative)
-
-If you already have EMSDK 3.1.63 installed:
-
-```bash
-source /opt/emsdk/emsdk_env.sh   # or your emsdk activation path
-yarn workspace @privyid/ghostscript build
-```
+See [STEERING.md](./STEERING.md) for project conventions, commit style, and the development workflow.
 
 ## License
 
