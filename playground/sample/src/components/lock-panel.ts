@@ -25,12 +25,26 @@ export function createLockPanel (): HTMLElement {
     try {
       const locked = await isRequirePassword(file)
 
-      result.innerHTML = `
-        <div class="result" style="text-align:center;padding:24px">
-          <span class="status-badge ${locked ? 'true' : 'false'}">${locked ? 'REQUIRES PASSWORD' : 'NOT LOCKED'}</span>
-          <div style="margin-top:8px;font-size:0.75rem;color:var(--text-muted)">${file.name}</div>
-        </div>
-      `
+      result.innerHTML = ''
+
+      const wrapper = document.createElement('div')
+      wrapper.className = 'result'
+      wrapper.style.textAlign = 'center'
+      wrapper.style.padding = '24px'
+
+      const badge = document.createElement('span')
+      badge.className = `status-badge ${locked ? 'true' : 'false'}`
+      badge.textContent = locked ? 'REQUIRES PASSWORD' : 'NOT LOCKED'
+
+      const nameEl = document.createElement('div')
+      nameEl.style.marginTop = '8px'
+      nameEl.style.fontSize = '0.75rem'
+      nameEl.style.color = 'var(--text-muted)'
+      nameEl.textContent = file.name
+
+      wrapper.appendChild(badge)
+      wrapper.appendChild(nameEl)
+      result.appendChild(wrapper)
     } catch (err) {
       renderError(result, String(err))
     }
