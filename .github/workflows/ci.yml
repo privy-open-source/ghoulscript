@@ -48,7 +48,7 @@ jobs:
           submodules: "recursive"
 
       - name: Use EMSDK ${{ env.EM_VERSION }}
-        uses: mymindstorm/setup-emsdk@v14
+        uses: mymindstorm/setup-emsdk@v16
         with:
           version: ${{ env.EM_VERSION }}
           actions-cache-folder: '.emsdk'
