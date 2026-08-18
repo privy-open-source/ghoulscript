@@ -27,9 +27,9 @@ export async function loadDemoFile (name: string): Promise<Blob> {
 
 export function downloadBlob (data: Uint8Array, filename: string, mimeType = 'application/pdf'): void {
   const url = URL.createObjectURL(new Blob([data], { type: mimeType }))
-  const a = document.createElement('a')
+  const a   = document.createElement('a')
 
-  a.href = url
+  a.href     = url
   a.download = filename
   a.click()
   URL.revokeObjectURL(url)
@@ -51,17 +51,17 @@ export function renderLoading (container: HTMLElement | null, message = 'Process
 
 export function escapeHtml (str: string): string {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
 }
 
 export function setupDropZone (
   dropZone: HTMLElement,
   callback: (file: File) => void,
 ): void {
-  const input = dropZone.querySelector<HTMLInputElement>('input[type="file"]')!
+  const input = dropZone.querySelector<HTMLInputElement>('input[type="file"]') as HTMLInputElement
 
   input.addEventListener('change', () => {
     const file = input.files?.[0]

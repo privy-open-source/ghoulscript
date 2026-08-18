@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { renderPageAsImage } from '../types'
-import { bytes, renderError, renderLoading, setupDropZone } from '../ui'
+import {
+  bytes, renderError, renderLoading, setupDropZone,
+} from '../ui'
 
 export function createRenderPanel (): HTMLElement {
-  const el = document.createElement('div')
+  const el     = document.createElement('div')
   el.className = 'card'
 
   el.innerHTML = `
@@ -32,17 +35,17 @@ export function createRenderPanel (): HTMLElement {
     <div id="result"></div>
   `
 
-  const dropZone = el.querySelector<HTMLElement>('.drop-zone')!
-  const result = el.querySelector<HTMLElement>('#result')!
-  const pageNum = el.querySelector<HTMLInputElement>('#page-num')!
-  const format = el.querySelector<HTMLSelectElement>('#format')!
-  const resolution = el.querySelector<HTMLInputElement>('#resolution')!
-  const btn = el.querySelector<HTMLButtonElement>('#render-btn')!
+  const dropZone   = el.querySelector<HTMLElement>('.drop-zone') as HTMLElement
+  const result     = el.querySelector<HTMLElement>('#result') as HTMLElement
+  const pageNum    = el.querySelector<HTMLInputElement>('#page-num') as HTMLInputElement
+  const format     = el.querySelector<HTMLSelectElement>('#format') as HTMLSelectElement
+  const resolution = el.querySelector<HTMLInputElement>('#resolution') as HTMLInputElement
+  const btn        = el.querySelector<HTMLButtonElement>('#render-btn') as HTMLButtonElement
 
-  let currentFile: File | null = null
+  let currentFile: File | undefined
 
   setupDropZone(dropZone, (file) => {
-    currentFile = file
+    currentFile      = file
     result.innerHTML = ''
   })
 
@@ -55,38 +58,38 @@ export function createRenderPanel (): HTMLElement {
     renderLoading(result, 'Rendering page…')
 
     try {
-      const page = parseInt(pageNum.value, 10) || 1
-      const fmt = format.value as 'jpg' | 'png'
-      const dpi = parseInt(resolution.value, 10) || 96
-      const output = await renderPageAsImage(currentFile as unknown as Uint8Array, page, { format: fmt, resolution: dpi })
+      const page   = Number.parseInt(pageNum.value, 10) || 1
+      const fmt    = format.value as 'jpg' | 'png'
+      const dpi    = Number.parseInt(resolution.value, 10) || 96
+      const output = (await renderPageAsImage(currentFile as unknown as Uint8Array, page, { format: fmt, resolution: dpi })) as Uint8Array
 
-      const mimeType = fmt === 'png' ? 'image/png' : 'image/jpeg'
-      const ext = fmt
-      const url = URL.createObjectURL(new Blob([output], { type: mimeType }))
-      const img = document.createElement('img')
-      img.src = url
-      img.alt = `Page ${page}`
+      const mimeType     = fmt === 'png' ? 'image/png' : 'image/jpeg'
+      const ext          = fmt
+      const url          = URL.createObjectURL(new Blob([output], { type: mimeType }))
+      const img          = document.createElement('img')
+      img.src            = url
+      img.alt            = `Page ${page}`
       img.style.maxWidth = '100%'
 
-      const dlLink = document.createElement('a')
-      dlLink.href = url
-      dlLink.download = `page-${page}.${ext}`
+      const dlLink       = document.createElement('a')
+      dlLink.href        = url
+      dlLink.download    = `page-${page}.${ext}`
       dlLink.textContent = `Download .${ext}`
-      dlLink.className = 'btn btn-secondary'
-      dlLink.onclick = () => URL.revokeObjectURL(url)
+      dlLink.className   = 'btn btn-secondary'
+      dlLink.addEventListener('click', () => URL.revokeObjectURL(url))
 
-      const sizeSpan = document.createElement('span')
-      sizeSpan.textContent = ` ${bytes(output.byteLength)}`
-      sizeSpan.style.color = 'var(--text-muted)'
+      const sizeSpan          = document.createElement('span')
+      sizeSpan.textContent    = ` ${bytes(output.byteLength)}`
+      sizeSpan.style.color    = 'var(--text-muted)'
       sizeSpan.style.fontSize = '0.75rem'
 
       result.innerHTML = ''
-      result.appendChild(img)
-      result.appendChild(document.createElement('br'))
-      result.appendChild(dlLink)
-      result.appendChild(sizeSpan)
-    } catch (err) {
-      renderError(result, String(err))
+      result.append(img)
+      result.append(document.createElement('br'))
+      result.append(dlLink)
+      result.append(sizeSpan)
+    } catch (error) {
+      renderError(result, String(error))
     }
   })
 

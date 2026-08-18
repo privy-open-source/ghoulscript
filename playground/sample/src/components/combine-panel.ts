@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { combinePDF, getInfo } from '../types'
-import { bytes, renderError, renderLoading, setupDropZone } from '../ui'
+import type { Info } from '../types'
+import {
+  bytes, renderError, renderLoading, setupDropZone,
+} from '../ui'
 
 export function createCombinePanel (): HTMLElement {
-  const el = document.createElement('div')
+  const el     = document.createElement('div')
   el.className = 'card'
 
   el.innerHTML = `
@@ -16,12 +20,12 @@ export function createCombinePanel (): HTMLElement {
     <div id="result"></div>
   `
 
-  const dropZone = el.querySelector<HTMLElement>('.drop-zone')!
-  const result = el.querySelector<HTMLElement>('#result')!
+  const dropZone = el.querySelector<HTMLElement>('.drop-zone') as HTMLElement
+  const result   = el.querySelector<HTMLElement>('#result') as HTMLElement
 
   setupDropZone(dropZone, async (_file) => {
-    const input = dropZone.querySelector<HTMLInputElement>('input[type="file"]')!
-    const files: File[] = Array.from(input.files ?? []).filter(f => f.type === 'application/pdf' || f.name.endsWith('.pdf'))
+    const input         = dropZone.querySelector<HTMLInputElement>('input[type="file"]') as HTMLInputElement
+    const files: File[] = [...(input.files ?? [])].filter((f) => f.type === 'application/pdf' || f.name.endsWith('.pdf'))
 
     if (files.length === 0) {
       renderError(result, 'No PDF files selected')
@@ -31,8 +35,8 @@ export function createCombinePanel (): HTMLElement {
     renderLoading(result, 'Combining PDFs…')
 
     try {
-      const output = await combinePDF(files as unknown as Uint8Array[])
-      const info = await getInfo(output as unknown as Uint8Array)
+      const output = (await combinePDF(files as unknown as Uint8Array[])) as Uint8Array
+      const info   = (await getInfo(output)) as Info
 
       const url = URL.createObjectURL(new Blob([output], { type: 'application/pdf' }))
 
@@ -42,8 +46,8 @@ export function createCombinePanel (): HTMLElement {
           <div style="margin-top:8px"><a href="${url}" download="combined.pdf" class="btn" onclick="URL.revokeObjectURL(this.href)">Download</a></div>
         </div>
       `
-    } catch (err) {
-      renderError(result, String(err))
+    } catch (error) {
+      renderError(result, String(error))
     }
   })
 

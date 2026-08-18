@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { optimizePDF } from '../types'
-import { bytes, renderError, renderLoading, setupDropZone } from '../ui'
+import {
+  bytes, renderError, renderLoading, setupDropZone,
+} from '../ui'
 
 export function createOptimizePanel (): HTMLElement {
-  const el = document.createElement('div')
+  const el     = document.createElement('div')
   el.className = 'card'
 
   el.innerHTML = `
@@ -16,19 +19,19 @@ export function createOptimizePanel (): HTMLElement {
     <div id="result"></div>
   `
 
-  const dropZone = el.querySelector<HTMLElement>('.drop-zone')!
-  const result = el.querySelector<HTMLElement>('#result')!
+  const dropZone = el.querySelector<HTMLElement>('.drop-zone') as HTMLElement
+  const result   = el.querySelector<HTMLElement>('#result') as HTMLElement
 
   setupDropZone(dropZone, async (file) => {
     renderLoading(result, 'Optimizing PDF…')
 
     try {
-      const start = performance.now()
-      const output = await optimizePDF(file)
+      const start   = performance.now()
+      const output  = await optimizePDF(file)
       const elapsed = ((performance.now() - start) / 1000).toFixed(2)
 
       const savings = file.size - output.byteLength
-      const pct = Math.round(savings / file.size * 100)
+      const pct     = Math.round(savings / file.size * 100)
 
       const url = URL.createObjectURL(new Blob([output], { type: 'application/pdf' }))
 
@@ -39,8 +42,8 @@ export function createOptimizePanel (): HTMLElement {
           <div style="margin-top:8px"><a href="${url}" download="optimized.pdf" class="btn" onclick="URL.revokeObjectURL(this.href)">Download optimized PDF</a></div>
         </div>
       `
-    } catch (err) {
-      renderError(result, String(err))
+    } catch (error) {
+      renderError(result, String(error))
     }
   })
 

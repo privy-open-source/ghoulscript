@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { addPassword, isRequirePassword } from '../types'
-import { renderError, renderLoading, setupDropZone } from '../ui'
+import {
+  renderError, renderLoading, setupDropZone,
+} from '../ui'
 
 export function createEncryptPanel (): HTMLElement {
-  const el = document.createElement('div')
+  const el     = document.createElement('div')
   el.className = 'card'
 
   el.innerHTML = `
@@ -25,16 +28,16 @@ export function createEncryptPanel (): HTMLElement {
     <div id="result"></div>
   `
 
-  const dropZone = el.querySelector<HTMLElement>('.drop-zone')!
-  const result = el.querySelector<HTMLElement>('#result')!
-  const userPass = el.querySelector<HTMLInputElement>('#user-pass')!
-  const ownerPass = el.querySelector<HTMLInputElement>('#owner-pass')!
-  const btn = el.querySelector<HTMLButtonElement>('#encrypt-btn')!
+  const dropZone  = el.querySelector<HTMLElement>('.drop-zone') as HTMLElement
+  const result    = el.querySelector<HTMLElement>('#result') as HTMLElement
+  const userPass  = el.querySelector<HTMLInputElement>('#user-pass') as HTMLInputElement
+  const ownerPass = el.querySelector<HTMLInputElement>('#owner-pass') as HTMLInputElement
+  const btn       = el.querySelector<HTMLButtonElement>('#encrypt-btn') as HTMLButtonElement
 
-  let currentFile: File | null = null
+  let currentFile: File | undefined
 
   setupDropZone(dropZone, (file) => {
-    currentFile = file
+    currentFile      = file
     result.innerHTML = ''
   })
 
@@ -53,8 +56,8 @@ export function createEncryptPanel (): HTMLElement {
     renderLoading(result, 'Encrypting PDF…')
 
     try {
-      const output = await addPassword(currentFile as unknown as Uint8Array, password, ownerPass.value || undefined)
-      const locked = await isRequirePassword(output as unknown as Uint8Array)
+      const output = (await addPassword(currentFile as unknown as Uint8Array, password, ownerPass.value || undefined)) as Uint8Array
+      const locked = (await isRequirePassword(output)) as boolean
 
       const url = URL.createObjectURL(new Blob([output], { type: 'application/pdf' }))
 
@@ -64,8 +67,8 @@ export function createEncryptPanel (): HTMLElement {
           <div style="margin-top:8px"><a href="${url}" download="encrypted.pdf" class="btn" onclick="URL.revokeObjectURL(this.href)">Download</a></div>
         </div>
       `
-    } catch (err) {
-      renderError(result, String(err))
+    } catch (error) {
+      renderError(result, String(error))
     }
   })
 

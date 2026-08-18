@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { splitPdf } from '../types'
-import { bytes, renderError, renderLoading, setupDropZone } from '../ui'
+import {
+  bytes, renderError, renderLoading, setupDropZone,
+} from '../ui'
 
 export function createSplitPanel (): HTMLElement {
-  const el = document.createElement('div')
+  const el     = document.createElement('div')
   el.className = 'card'
 
   el.innerHTML = `
@@ -21,15 +24,15 @@ export function createSplitPanel (): HTMLElement {
     <div id="result"></div>
   `
 
-  const dropZone = el.querySelector<HTMLElement>('.drop-zone')!
-  const result = el.querySelector<HTMLElement>('#result')!
-  const rangesInput = el.querySelector<HTMLInputElement>('#page-ranges')!
-  const splitBtn = el.querySelector<HTMLButtonElement>('#split-btn')!
+  const dropZone    = el.querySelector<HTMLElement>('.drop-zone') as HTMLElement
+  const result      = el.querySelector<HTMLElement>('#result') as HTMLElement
+  const rangesInput = el.querySelector<HTMLInputElement>('#page-ranges') as HTMLInputElement
+  const splitBtn    = el.querySelector<HTMLButtonElement>('#split-btn') as HTMLButtonElement
 
-  let currentFile: File | null = null
+  let currentFile: File | undefined
 
   setupDropZone(dropZone, (file) => {
-    currentFile = file
+    currentFile      = file
     result.innerHTML = ''
   })
 
@@ -45,12 +48,12 @@ export function createSplitPanel (): HTMLElement {
       return
     }
 
-    const pageLists = raw.split(',').map(s => s.trim())
+    const pageLists = raw.split(',').map((s) => s.trim())
 
     renderLoading(result, 'Splitting PDF…')
 
     try {
-      const outputs = await splitPdf(currentFile as unknown as Uint8Array, pageLists as never[], {})
+      const outputs = (await splitPdf(currentFile as unknown as Uint8Array, pageLists as never[], {})) as Uint8Array[]
 
       const links = outputs.map((output: Uint8Array, i: number) => {
         const url = URL.createObjectURL(new Blob([output], { type: 'application/pdf' }))
@@ -59,8 +62,8 @@ export function createSplitPanel (): HTMLElement {
       }).join('')
 
       result.innerHTML = `<div class="result"><output-links>${links}</output-links></div>`
-    } catch (err) {
-      renderError(result, String(err))
+    } catch (error) {
+      renderError(result, String(error))
     }
   })
 

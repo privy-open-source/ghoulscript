@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { getInfo } from '../types'
-import { renderError, renderLoading, setupDropZone } from '../ui'
+import type { Info } from '../types'
+import {
+  renderError, renderLoading, setupDropZone,
+} from '../ui'
 
 export function createInfoPanel (): HTMLElement {
-  const el = document.createElement('div')
+  const el     = document.createElement('div')
   el.className = 'card'
 
   el.innerHTML = `
@@ -20,8 +24,8 @@ export function createInfoPanel (): HTMLElement {
     <div id="result"></div>
   `
 
-  const dropZone = el.querySelector<HTMLElement>('.drop-zone')!
-  const result = el.querySelector<HTMLElement>('#result')!
+  const dropZone  = el.querySelector<HTMLElement>('.drop-zone') as HTMLElement
+  const result    = el.querySelector<HTMLElement>('#result') as HTMLElement
   const passInput = el.querySelector('#info-pass') as HTMLInputElement
 
   setupDropZone(dropZone, async (file) => {
@@ -29,15 +33,15 @@ export function createInfoPanel (): HTMLElement {
     result.innerHTML = ''
 
     try {
-      const info = await getInfo(file, passInput.value ? { password: passInput.value } : {})
+      const info = (await getInfo(file, passInput.value ? { password: passInput.value } : {})) as Info
 
-      const table = document.createElement('table')
+      const table     = document.createElement('table')
       table.innerHTML = `
         <thead>
           <tr><th>Page</th><th>Width (pt)</th><th>Height (pt)</th></tr>
         </thead>
         <tbody>
-          ${info.pages.map(p => `<tr><td>${p.page}</td><td>${p.width}</td><td>${p.height}</td></tr>`).join('')}
+          ${info.pages.map((p: Info['pages'][number]) => `<tr><td>${p.page}</td><td>${p.width}</td><td>${p.height}</td></tr>`).join('')}
         </tbody>
       `
 
@@ -47,8 +51,8 @@ export function createInfoPanel (): HTMLElement {
           ${table.outerHTML}
         </div>
       `
-    } catch (err) {
-      renderError(result, String(err))
+    } catch (error) {
+      renderError(result, String(error))
     }
   })
 

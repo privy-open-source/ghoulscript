@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { removePassword, isRequirePassword } from '../types'
-import { renderError, renderLoading, setupDropZone } from '../ui'
+import {
+  renderError, renderLoading, setupDropZone,
+} from '../ui'
 
 export function createDecryptPanel (): HTMLElement {
-  const el = document.createElement('div')
+  const el     = document.createElement('div')
   el.className = 'card'
 
   el.innerHTML = `
@@ -21,15 +24,15 @@ export function createDecryptPanel (): HTMLElement {
     <div id="result"></div>
   `
 
-  const dropZone = el.querySelector<HTMLElement>('.drop-zone')!
-  const result = el.querySelector<HTMLElement>('#result')!
-  const passInput = el.querySelector<HTMLInputElement>('#decrypt-pass')!
-  const btn = el.querySelector<HTMLButtonElement>('#decrypt-btn')!
+  const dropZone  = el.querySelector<HTMLElement>('.drop-zone') as HTMLElement
+  const result    = el.querySelector<HTMLElement>('#result') as HTMLElement
+  const passInput = el.querySelector<HTMLInputElement>('#decrypt-pass') as HTMLInputElement
+  const btn       = el.querySelector<HTMLButtonElement>('#decrypt-btn') as HTMLButtonElement
 
-  let currentFile: File | null = null
+  let currentFile: File | undefined
 
   setupDropZone(dropZone, (file) => {
-    currentFile = file
+    currentFile      = file
     result.innerHTML = ''
   })
 
@@ -48,19 +51,19 @@ export function createDecryptPanel (): HTMLElement {
     renderLoading(result, 'Removing password…')
 
     try {
-      const output = await removePassword(currentFile as unknown as Uint8Array, password)
-      const locked = await isRequirePassword(output as unknown as Uint8Array)
+      const output = (await removePassword(currentFile as unknown as Uint8Array, password)) as Uint8Array
+      const locked = (await isRequirePassword(output)) as boolean
 
       const url = URL.createObjectURL(new Blob([output], { type: 'application/pdf' }))
 
       result.innerHTML = `
         <div class="result">
-          <div>Decrypted &mdash; ${!locked ? '<span class="status-badge false">No password required</span>' : '<span class="status-badge true">Still requires password</span>'}</div>
+          <div>Decrypted &mdash; ${locked ? '<span class="status-badge true">Still requires password</span>' : '<span class="status-badge false">No password required</span>'}</div>
           <div style="margin-top:8px"><a href="${url}" download="decrypted.pdf" class="btn" onclick="URL.revokeObjectURL(this.href)">Download</a></div>
         </div>
       `
-    } catch (err) {
-      renderError(result, String(err))
+    } catch (error) {
+      renderError(result, String(error))
     }
   })
 
