@@ -19,6 +19,12 @@ export {
   setWorkerRPC,
 } from './rpc'
 
+export type {
+  CompressOptions,
+  RenderOptions,
+  Info,
+} from './core'
+
 async function call <C extends Commands> (name: C, args: CommandArgs<C>): Promise<CommandResult<C>> {
   return useConfig().useWorker
     ? callWorkerRPC(name, args)

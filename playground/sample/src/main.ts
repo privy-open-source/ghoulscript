@@ -1,52 +1,49 @@
-import { optimizePDF } from '@privyid/ghoulscript'
+import './styles.css'
+import { createOptimizePanel } from './components/optimize-panel'
+import { createCombinePanel } from './components/combine-panel'
+import { createSplitPanel } from './components/split-panel'
+import { createEncryptPanel } from './components/encrypt-panel'
+import { createDecryptPanel } from './components/decrypt-panel'
+import { createRenderPanel } from './components/render-panel'
+import { createInfoPanel } from './components/info-panel'
+import { createLockPanel } from './components/lock-panel'
 
-const input = document.querySelector<HTMLInputElement>('#input')
-const timer = document.querySelector<HTMLSpanElement>('#timer')
-const log   = document.querySelector<HTMLSpanElement>('#log')
+const tabsContainer   = document.querySelector<HTMLElement>('#tabs') as HTMLElement
+const panelsContainer = document.querySelector<HTMLElement>('#panels') as HTMLElement
+const timer           = document.querySelector<HTMLElement>('#timer')
 
-function bytes (bytes: number, decimal = 2, k = 1024) {
-  if (bytes === 0)
-    return '0 Bytes'
+const definitions = [
+  { label: 'Optimize', create: createOptimizePanel },
+  { label: 'Combine', create: createCombinePanel },
+  { label: 'Split', create: createSplitPanel },
+  { label: 'Encrypt', create: createEncryptPanel },
+  { label: 'Decrypt', create: createDecryptPanel },
+  { label: 'Render', create: createRenderPanel },
+  { label: 'Info', create: createInfoPanel },
+  { label: 'Lock Check', create: createLockPanel },
+] as const
 
-  const sizes = [
-    `${bytes === 1 ? 'Byte' : 'Bytes'}`,
-    'KB',
-    'MB',
-    'GB',
-    'TB',
-    'PB',
-    'EB',
-    'ZB',
-    'YB',
-  ]
+for (const [index, def] of definitions.entries()) {
+  const btn          = document.createElement('button')
+  btn.className      = `tab-btn${index === 0 ? ' active' : ''}`
+  btn.textContent    = def.label
+  btn.dataset.target = def.label
 
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  const panel     = def.create()
+  panel.className = `panel${index === 0 ? ' active' : ''}`
 
-  return `${Number.parseFloat((bytes / Math.pow(k, i)).toFixed(decimal))} ${sizes[i]}`
+  btn.addEventListener('click', () => {
+    for (const b of tabsContainer.querySelectorAll('.tab-btn')) b.classList.remove('active')
+    for (const p of panelsContainer.querySelectorAll('.panel')) p.classList.remove('active')
+    btn.classList.add('active')
+    panel.classList.add('active')
+  })
+
+  tabsContainer.append(btn)
+  panelsContainer.append(panel)
 }
-
-input?.addEventListener('change', async () => {
-  const file = input?.files?.[0]
-
-  if (file) {
-    try {
-      const start  = performance.now()
-      const result = await optimizePDF(file)
-
-      const diffBytes = result.byteLength - file.size
-      const diff      = Math.round(diffBytes / file.size * 100)
-
-      if (log)
-        log.textContent = `Result: ${bytes(file.size)} => ${bytes(result.byteLength)} (${diff}%: ${bytes(Math.abs(diffBytes))}), Duration: ${Math.round((performance.now() - start) / 1000)}s`
-
-      window.open(URL.createObjectURL(new Blob([result], { type: 'application/pdf' })), '_blank')
-    } catch (error) {
-      console.error(error)
-    }
-  }
-})
 
 setInterval(() => {
   if (timer)
-    timer.textContent = `${new Date().toString()}`
+    timer.textContent = new Date().toString()
 }, 1000)

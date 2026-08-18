@@ -1,6 +1,10 @@
 {
   "extends": ["@privyid/eslint-config-persona"],
   "parserOptions": {
-    "project": ["./tsconfig.json", "./packages/*/tsconfig.json"]
+    "project": [
+      "./tsconfig.json",
+      "./packages/*/tsconfig.json",
+      "./playground/*/tsconfig.json"
+    ]
   }
 }

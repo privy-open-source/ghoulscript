@@ -5,7 +5,8 @@
 .gitmodules
 
 # Submodule contents (replaced by mounted context in CI)
-packages/ghostscript/ghostpdl
+# ghostpdl is included for local builds (excluded from CI)
+# packages/ghostscript/ghostpdl
 packages/ghostscript/out
 packages/ghostscript/dist
 packages/ghostscript/build/arch_wasm.h.tmp
