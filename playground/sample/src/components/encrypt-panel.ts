@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { addPassword, isRequirePassword } from '../types'
 import {
-  renderError, renderLoading, setupDropZone,
+  renderError,
+  renderLoading,
+  setupDropZone,
 } from '../ui'
 
 export function createEncryptPanel (): HTMLElement {

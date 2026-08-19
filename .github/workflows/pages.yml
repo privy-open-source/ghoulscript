@@ -14,6 +14,9 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  EM_VERSION: 6.0.6
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,10 +26,10 @@ jobs:
         with:
           submodules: "recursive"
 
-      - name: Use EMSDK
+      - name: Use EMSDK ${{ env.EM_VERSION }}
         uses: mymindstorm/setup-emsdk@v16
         with:
-          version: ${{ vars.EM_VERSION || '6.0.6' }}
+          version: ${{ env.EM_VERSION }}
           actions-cache-folder: '.emsdk'
 
       - name: Use Corepack
@@ -41,11 +44,8 @@ jobs:
       - name: Install Deps
         run: yarn install --immutable
 
-      - name: Build Package
-        run: yarn workspace @privyid/ghoulscript build
-
-      - name: Build Playground
-        run: yarn workspace @privyid/ghoulscript-sample build
+      - name: Build Package & Playground
+        run: yarn build
 
       - name: Deploy to Pages
         uses: peaceiris/actions-gh-pages@v4

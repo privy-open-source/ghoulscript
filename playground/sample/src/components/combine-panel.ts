@@ -6,9 +6,9 @@ import {
 } from '../ui'
 
 export function createCombinePanel (): HTMLElement {
-  const el     = document.createElement('div')
-  el.className = 'card'
+  const el = document.createElement('div')
 
+  el.className = 'card'
   el.innerHTML = `
     <h3>Combine PDFs</h3>
     <div class="drop-zone">

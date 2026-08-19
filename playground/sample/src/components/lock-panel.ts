@@ -4,9 +4,9 @@ import {
 } from '../ui'
 
 export function createLockPanel (): HTMLElement {
-  const el     = document.createElement('div')
-  el.className = 'card'
+  const el = document.createElement('div')
 
+  el.className = 'card'
   el.innerHTML = `
     <h3>Check Password Lock</h3>
     <div class="drop-zone">

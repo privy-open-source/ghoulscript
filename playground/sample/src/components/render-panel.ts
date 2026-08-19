@@ -5,9 +5,9 @@ import {
 } from '../ui'
 
 export function createRenderPanel (): HTMLElement {
-  const el     = document.createElement('div')
-  el.className = 'card'
+  const el = document.createElement('div')
 
+  el.className = 'card'
   el.innerHTML = `
     <h3>Render PDF Page as Image</h3>
     <div class="drop-zone">

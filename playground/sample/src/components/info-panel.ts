@@ -2,7 +2,9 @@
 import { getInfo } from '../types'
 import type { Info } from '../types'
 import {
-  renderError, renderLoading, setupDropZone,
+  renderError,
+  renderLoading,
+  setupDropZone,
 } from '../ui'
 
 export function createInfoPanel (): HTMLElement {
