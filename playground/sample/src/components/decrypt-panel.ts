@@ -5,9 +5,9 @@ import {
 } from '../ui'
 
 export function createDecryptPanel (): HTMLElement {
-  const el     = document.createElement('div')
-  el.className = 'card'
+  const el = document.createElement('div')
 
+  el.className = 'card'
   el.innerHTML = `
     <h3>Decrypt PDF</h3>
     <div class="drop-zone">

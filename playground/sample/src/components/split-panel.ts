@@ -5,9 +5,9 @@ import {
 } from '../ui'
 
 export function createSplitPanel (): HTMLElement {
-  const el     = document.createElement('div')
-  el.className = 'card'
+  const el = document.createElement('div')
 
+  el.className = 'card'
   el.innerHTML = `
     <h3>Split PDF</h3>
     <div class="drop-zone">
