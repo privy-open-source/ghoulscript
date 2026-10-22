@@ -1,0 +1,1 @@
+function e(e){return new Worker(new URL(`/ghoulscript/assets/worker-Deek7Efa-ocx-81cr.js`,``+import.meta.url).href,{name:e?.name})}export{e as default};
